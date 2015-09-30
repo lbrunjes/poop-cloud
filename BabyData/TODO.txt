@@ -1,0 +1,3 @@
+﻿FEATURES TO ADD
+ - Password reset via email.
+ - Account locking.
