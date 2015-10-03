@@ -1,0 +1,188 @@
+
+body{
+	font-family: Helvetica, Ubuntu, Arial, sans-serif;
+	font-size:16px;
+	line-height: 1.4;
+}
+/* text eleements*/
+span{
+
+}
+a{
+
+}
+q{
+
+}
+em,i{
+
+}
+strong, b{
+
+}
+sub,sup{
+	font-size: 12px;
+}
+
+code{
+	padding:1ex 1em;
+	font-family: courier, monospace;
+
+}
+mark{
+	background:#aaa;
+}
+
+/*basic blocks*/
+hr{
+
+}
+p{
+	margin-bottom:16px;
+}
+pre{
+	padding:1ex 1em;
+}
+
+blockquote{
+	padding:1ex 1em;
+}
+
+section,header,nav,article,footer,div{
+	padding:0;
+	display:block;
+	&:before,
+	&:after {
+		content: " ";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+/* klist elements*/
+ol, ul{
+	margin:1em 0;
+	padding:0 1em  0 2em  ;
+}
+
+li
+
+/* headings */
+h1,h2,h3,h4,h5,h6{
+	display:block;
+	margin:1em 0 0 0;
+	line-height:1;
+}
+h1{
+	font-size:36px;
+}
+h2{
+	font-size:30px;
+}
+h3{
+	font-size:24px;
+}
+h4{
+	font-size:18px;
+}
+h5{
+	font-size: 16px;
+}
+h6{
+	font-size: 14px
+}
+
+
+
+/* table elements*/
+table{
+	width:100%;
+	padding: 0;
+	margin:0 ;
+	border-spacing:0;
+	border-collapse: : collapse;
+}
+tr{
+
+}
+td{
+	padding:8px;
+}
+th{
+	font-weight:bold;
+	vertical-align: bottom;
+}
+tfoot,tbody,thead{
+	display: table-header-group;
+	vertical-align: middle;
+}
+
+
+/*media elements*/
+video{
+	border:1px solid #fee;
+}
+audio{
+	border:1px solid #efe;
+}
+canvas{
+	border:1px solid #eef;
+}
+iframe{
+	border:1px solid #000;
+}
+img{
+	border: none;
+}
+/*form elements*/
+button{
+	min-height: 48px;
+	min-width: 48px;
+	padding: 1ex 1em;
+	vertical-align: middle;
+	text-align: center;
+	border-radius: 4px;
+	display:inline-block;
+	background: #adf;
+}
+
+/*shortcut classes */
+small, .small{
+	font-size:12px;
+}
+.large{
+	font-size:20px;
+}
+.mute{
+	color: #666;
+}
+.warning{
+	background:#ff0;
+	color:#000;
+}
+.error{
+	background:#ff0;
+	color:#000;
+}
+.success{
+	background:#00f;
+	color:#fff;
+}
+.active{
+	background:#00f;
+	color:#fff;
+}
+.info{
+	background:#00f;
+	color:#fff;
+}
+
+.hide{
+	display: none!important;
+}
+.container{
+	margin :0 auto;
+	text-align:left;
+}

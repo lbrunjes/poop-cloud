@@ -1,0 +1,43 @@
+﻿SELECT 'START' FROM sqite_master;
+CREATE TABLE User(
+	Username 	CHAR(255) 	NOT NULL 	UNIQUE,
+	Email 		CHAR(255) 	NOT NULL,
+	Salt 		CHAR(255) 	NOT NULL,
+	Hash 		CHAR(255) 	NOT NULL,
+	Image 		CHAR(1024),
+	Role 		INT,
+	Flag 		INT,
+	Joined 		CHAR(25) 	NOT NULL
+	);
+
+CREATE TABLE Baby(
+	Id	 	CHAR(255) 	PRIMARY KEY ASC,
+	Name	CHAR(255),
+	Image	CHAR(1024),
+	Sex		CHAR(1),
+	DateOfBirth CHAR(25),
+	IsPublic CHAR(1)
+
+	);
+
+CREATE TABLE BabyEvent(
+	Id			INT			PRIMARY KEY ASC,
+	Reported 	CHAR(25) 	NOT NULL,
+	BabyId		CHAR(255)	NOT NULL,
+	Event		CHAR(255) 	NOT NULL,
+	Event		TEXT 		NOT NULL,
+	FOREIGN KEY(BabyId) REFERENCES Baby(Id)
+	);
+
+CREATE TABLE Permission(
+	Id			INT			PRIMARY KEY ASC,
+	Type 		CHAR(50) 	NOT NULL,
+	Username	CHAR(255)	NOT NULL,
+	BabyId		CHAR(255)	NOT NULL,
+	Added 	CHAR(25) 	NOT NULL,
+	FOREIGN KEY(BabyId) REFERENCES Baby(Id),
+	FOREIGN KEY(Username) REFERENCES User(Username)
+	);
+
+--add test data
+--admin|admin@fake.com|SAgLd4xiDPVPj6sFTcyLCRgP8rk09VmW9p9rpN8ZRikFiz0f/SVBhL+vS2tLHs0qPlshI8rgT7haYS8CFZn5XA==|JGRso/T/Qpz6pA+TsnR9ngo+f/Q=||1|0|2015-10-01 08:37:52 -500

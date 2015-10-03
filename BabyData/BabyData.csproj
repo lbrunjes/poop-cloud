@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{73CF600F-086A-4DCD-8508-F78067472167}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BabyData</RootNamespace>
+    <AssemblyName>BabyData</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="Mono.Data.Sqlite" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\System.Data.SQLite.Core.targets')" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <ItemGroup>
+    <Compile Include="Authentication\AuthMethod.cs" />
+    <Compile Include="Authentication\Exceptions.cs" />
+    <Compile Include="Data\BabyEvent.cs" />
+    <Compile Include="Data\Baby.cs" />
+    <Compile Include="Data\User.cs" />
+    <Compile Include="Data\Permission.cs" />
+    <Compile Include="Authentication\HttpBasic.cs" />
+    <Compile Include="Service.ashx.cs">
+      <DependentUpon>Service.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DataObject.cs" />
+    <Compile Include="Sources\PostgresWrapper.cs" />
+    <Compile Include="Sources\SqliteWrapper.cs" />
+    <Compile Include="Sources\IBabyDataSource.cs" />
+    <Compile Include="Registration.ashx.cs">
+      <DependentUpon>Registration.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Handler\Responder.cs" />
+    <Compile Include="Handler\BabyResponder.cs" />
+    <Compile Include="Handler\BabyEventResponder.cs" />
+    <Compile Include="Handler\PermissionResponder.cs" />
+    <Compile Include="Handler\UserResponder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Authentication\" />
+    <Folder Include="Sources\" />
+    <Folder Include="Handler\" />
+    <Folder Include="json\" />
+    <Folder Include="web\" />
+    <Folder Include="web\media\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Service.ashx" />
+    <Content Include="web.config" />
+    <Content Include="Registration.ashx" />
+    <Content Include="web\index.html" />
+    <Content Include="web\media\mobile.css" />
+    <Content Include="web\media\web.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TODO.txt" />
+    <None Include="test.db" />
+    <None Include="Sources\database.sqlite.txt" />
+  </ItemGroup>
+</Project>

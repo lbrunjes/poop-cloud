@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BabyData.Data
 {
 	[Serializable]
 	public abstract class DataObject
 	{
-		bool active =true;
-		public string ToJSON(){
-			return "{}";
+		public virtual string ToJSON(){
+			return String.Format(@"{{""TODO"":"":(""}}");
 		}
-		public void Delete(){
-			active = false;
+		public virtual List<string> ValidationErrors(){
+			return new List<string> ();
 		}
+
 	}
 }
 

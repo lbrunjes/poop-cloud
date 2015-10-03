@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using BabyData.Data;
-using Npgsql;
+
 
 namespace BabyData.Authentication
 {
@@ -15,6 +15,7 @@ namespace BabyData.Authentication
 		public override void HandleFailure (System.Web.HttpResponse response, AuthException ae)
 		{
 			response.AddHeader("WWW-Authenticate", "Basic realm=\""+Environment.MachineName+"\"");
+			response.StatusCode = 401;
 		}
 		public override User Login (System.Web.HttpRequest request)
 		{
@@ -34,14 +35,16 @@ namespace BabyData.Authentication
 				string password = text.Substring (colon + 1);
 
 
-				User ReferenceUser = DataSource.ReadUser(user);
+				User ReferenceUser = DataSource.ReadUser (user);
 
-				if (ReferenceUser!= null &&
-					ReferenceUser.Hash == ReferenceUser.BuildHash(password)) {
+				if (ReferenceUser != null &&
+				    ReferenceUser.Hash == ReferenceUser.BuildHash (password)) {
 					u = ReferenceUser;
 				} else {
 					throw new InvalidLoginException ("User cannot be Logged In. Please Check Username and  Password.");
 				}
+			} else {
+				throw new AuthException ("No header sent");
 			}
 
 			return u;

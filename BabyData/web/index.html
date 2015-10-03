@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Baby Test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="media/base.css"/>
+	<link rel="stylesheet" href="media/web.css"/>
+</head>
+<body>
+	<header id="baby-header">
+		<h1>BabyName</h1>
+		<nav id="action-bar">
+			<button>DIAPER </button>
+			<button>FEEDING</button>
+			<button>SLEEP</button>
+		</nav>
+	</header>
+	
+	<article>
+		<nav class="tabs">
+			<a href="#timeline">Timeline</a>
+			<a href="#chart">Chart</a>
+		</nav>
+		<div id="timeline">
+			<h2> Event Timeline</h2>
+			<p>details</p>
+			<nav>
+				<button>TODAY</button>
+				<button>YESTERDAY</button>
+				<button>WEEK</button>
+				<button>MONTH</button>
+				<button>ALL</button>
+			</nav>
+			
+			<div id="events-list" >
+				<div class="event diaper" id ="event-1234">
+					<div class="chunk time">
+						<span> + 2 HOUR</span>
+					</div>
+					<div class="chunk">
+						<h3>DIAPER</h3>
+						<p> Mixed</p>
+					</div>
+					<div class="chunk type">
+						<p> User <a href="#">@Diaperbot</a></p>
+						</div>
+					<div class="chunk details">
+						<p> auto filled</p>
+					</div>
+				</div>
+				<div class="event feeding" id ="event-1234">
+					<div class="chunk">
+						<span> + 2 HOUR</span>
+					</div>
+					<div class="chunk">
+						<h3>BOTTLE</h3>
+						<p> :)</p>
+					</div>
+					<div class="chunk">
+						<p> User <a href="#">@Diaperbot</a></p>
+						</div>
+					<div class="chunk">
+						<p> Notes: auto filled</p>
+					</div>
+				</div>
+				<div class="event sleep" id ="event-1234">
+					<div class="chunk">
+						<span> + 2 HOUR</span>
+					</div>
+					<div class="chunk">
+						<h3>SLEEP</h3>
+						<p> ENDED</p>
+					</div>
+					<div class="chunk">
+						<p> User <a href="#">@Diaperbot</a></p>
+					</div>
+					<div class="chunk">
+						<p> Notes: auto filled</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div id="chart">
+			<h2>Chart</h2>
+			<nav></nav>
+			<canvas></canvas>
+			<ul>
+				<li>Test</li>
+			</ul>
+		</div>
+	</article>
+	<footer>
+	this is wasted space.
+	</footer>
+</body>
+</html>

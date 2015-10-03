@@ -1,3 +1,9 @@
-﻿FEATURES TO ADD
+﻿FEATURES TO ADD TO THE BACKEND
  - Password reset via email.
  - Account locking.
+
+FRONTEND
+ - IMPLEMENT 
+
+TESTS
+ -IMPLMENT

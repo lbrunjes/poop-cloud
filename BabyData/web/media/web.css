@@ -1,0 +1,71 @@
+﻿
+#baby-header{
+	position:fixed;
+	top:0;
+	height:128px;
+	background: #333;
+	width:100%;
+	text-align:center;
+	vertical-align: center;
+}
+#baby-header h1{
+	height:64px;
+	margin:0;
+}
+#baby-header nav {
+height:64px;
+
+}
+body{
+	margin-top:128px;
+	background:#222;;
+	color:#fff;
+}
+a{
+	color:#adf;
+
+}
+button.active
+
+#events-list{
+	padding: 0 1em;
+}
+#events-list .event{
+	
+	margin:1px 0 0 0 ;
+	clear:left;
+	border-width: 1px;
+	border-style: solid;
+	border-radius:4px;
+	padding: 0 0 0 64px;
+	background-position: left center;
+	background-repeat: no-repeat;
+	height:64px;
+	overflow:hidden;
+}
+#events-list .event h3,#events-list .event p{
+	margin:0;
+}
+#events-list .event .chunk{
+	display:inline-block;
+	padding: 0 8px;
+	vertical-align: middle;
+	text-align: center;
+	border-left :1px solid #fff;
+	height:64px;
+	min-width:96px;
+}
+
+.feeding{
+	border-color: #f00;
+	background-image:url("bg_feed.png");
+}
+.diaper{
+	border-color: #0f0;
+	background-image:url("bg_diaper.png");
+}
+.sleep{
+	border-color: #00f;
+	
+	background-image:url("bg_sleep.png");
+}
