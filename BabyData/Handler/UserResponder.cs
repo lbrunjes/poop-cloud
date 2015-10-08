@@ -10,15 +10,15 @@ namespace BabyData
 			System.Web.HttpRequest request, 
 			IBabyDataSource DataSource)
 		{
-			bool okay = base.HasPermision (user, request, DataSource);
-			if (!okay) {
-				if (request.HttpMethod == "GET") {
-					okay = true;
-				} else {
-					okay = user.Username == request ["id"];
-				}
-			}
-			return okay;
+//			bool okay = base.HasPermision (user, request, DataSource);
+//			if (!okay) {
+//				if (request.HttpMethod == "GET") {
+//					okay = true;
+//				} else {
+//					okay = user.Username == request ["id"];
+//				}
+//			}
+			return true;
 		}
 		public override void RespondToRequest (User user,
 			System.Web.HttpRequest request, 
@@ -26,31 +26,22 @@ namespace BabyData
 			IBabyDataSource DataSource)
 		{
 			User u;
+			if (!String.IsNullOrEmpty(request ["id"])) {
+				u = DataSource.ReadUser (request ["id"]);
+				switch (request.HttpMethod.ToUpper ()) {
 
-			switch (request.HttpMethod.ToUpper ()) {
+				case "GET":
+						response.Write (u.ToJSON ());
+					break;
 
-			case "GET":
-				if (!String.IsNullOrEmpty(request ["id"])) {
-					u = DataSource.ReadUser (request ["id"]);
+				case "POST":
 
-					response.Write (u.ToJSON ());
-
-				} else {
-					throw new ArgumentNullException ("Username not specified");
-				}
-
-				break;
-
-			case "POST":
-
-				//users cannot be created here only via the regiestration portal.
-				if (!String.IsNullOrEmpty(request ["id"])) {
-					
+					//users cannot be created here only via the regiestration portal.
 					u = DataSource.ReadUser (request ["id"]);
 					u.Email = request ["email"];
 					u.Image = request ["image"];
 
-					//PasswordChanges mathcing length, and old ps checked.
+					//PasswordChanges matching length, and old ps checked.
 					if (String.IsNullOrEmpty (request ["password1"]) &&
 						request ["password1"] == request ["password2"] &&
 						request["password1"].Length >  Registration.MIN_PW_LENGTH &&
@@ -66,19 +57,19 @@ namespace BabyData
 					} else {
 						throw new AccessViolationException ("You can't just edit someone else's user details");
 					}
-				
-				}
-				else{
-					throw new NotSupportedException ("Users must be created using the registration system");
-				}
+					
+					
 
-			break;
-
-				default:
-				throw new NotSupportedException ("Unsupported HTTP Method");
 				break;
 
+					default:
+					throw new NotSupportedException ("Unsupported HTTP Method");
+					break;
 
+
+			}
+			} else {
+				throw new ArgumentNullException ("Username not specified. Users must be created using the registration system");
 			}
 		}
 	}

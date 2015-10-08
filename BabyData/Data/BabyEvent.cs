@@ -5,7 +5,7 @@ namespace BabyData.Data
 	public class BabyEvent:DataObject
 	{
 		
-		public DateTime ReportTime;
+		public DateTime ReportTime = DateTime.Now;
 		public string ReportUser;
 		public string BabyId;
 		public int Id;
@@ -15,18 +15,24 @@ namespace BabyData.Data
 		public BabyEvent ()
 		{
 		}
+		public BabyEvent(string babyId, string username, string eventname, string details = ""){
+			BabyId = babyId;
+			ReportUser = username;
+			Event = eventname;
+			Details = details;
+		}
 		 public override string ToJSON ()
 		{
 			return string.Format ("{{" +
-				"\"id\":\"{0}\"" +
-				"\"baby\":\"{1}\"" +
-				"\"event\":\"{2}\"" +
+				"\"id\":\"{0}\"," +
+				"\"baby\":\"{1}\"," +
+				"\"event\":\"{2}\"," +
 				"\"user\":\"{3}\"," +
-				"\"time\":\"{4:yyyy-MM-dd hh:mm:ss zzz}\"" +
+				"\"time\":\"{4:yyyy-MM-dd hh:mm:ss zzz}\"," +
 				"\"details\":\"{5}\"" +
 				"}}", 
 				this.Id,
-				this.BabyId, 
+				this.ToURLSafeBase64(this.BabyId), 
 				this.Event, 
 				this.ReportUser, 
 				this.ReportTime,

@@ -12,14 +12,16 @@ namespace BabyData
 		{
 			bool okay = base.HasPermision (user, request, DataSource);
 			if (!okay) {
-				if (!String.IsNullOrEmpty(request ["id"])) {
+				if (!String.IsNullOrEmpty (request ["id"])) {
 					Baby b = DataSource.ReadBaby (request ["id"], user);
-					if(request.HttpMethod == "GET"){
-						okay = (b.IsPublic || b.HasPermission(user.Username, Permission.Types.READ));
+					if (request.HttpMethod == "GET") {
+						okay = (b.IsPublic || b.HasPermission (user.Username, Permission.Types.READ));
+					} else {
+						okay = b.HasPermission (user.Username, Permission.Types.UPDATE);
 					}
-					else{
-						okay = b.HasPermission(user.Username,Permission.Types.UPDATE);
-					}
+				} else {
+					//no baby? no problem.
+					okay = true;
 				}
 			}
 			return okay;
@@ -40,12 +42,12 @@ namespace BabyData
 					if (b.HasPermission (user.Username, Permission.Types.READ)) {
 //						b.Permissions = DataSource.GetPermissionsForBaby (b, user);
 //						b.Events = DataSource.GetEventsForBaby (b, user);
-//						response.Write (b.ToJSON ());
+						response.Write (b.ToJSON ());
 					} else {
 						throw new AuthException ("You don't have permission to view this baby's data");
 					}
 				} else {
-					throw new ArgumentNullException ("Baby id not specified");
+					throw new ArgumentNullException ("Argument 'id' not specified. POST to CREATE a BABY or use and id.");
 				}
 					
 				break;
@@ -61,9 +63,11 @@ namespace BabyData
 
 				if(String.IsNullOrEmpty(request["id"])){
 					Baby fromDb = DataSource.CreateBaby(b,user);
+
 					response.Write (fromDb.ToJSON ());
 				}
 				else{
+					b.Id = request ["id"];
 						DataSource.SaveBaby(b, user);
 				}
 

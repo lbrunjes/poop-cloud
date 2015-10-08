@@ -12,7 +12,8 @@ namespace BabyData.Data
 	{
 
 		public List<BabyEvent> Events = new List<BabyEvent> ();
-		public string Id;
+		private string _id;
+		public string Id{ get { return this._id; } set { this._id = this.FromURLSafeBase64 (value); } }
 		public string Name;
 		public string Image;
 		public string Sex;
@@ -51,7 +52,7 @@ namespace BabyData.Data
 			StringBuilder EventJSON = new StringBuilder ();
 			foreach (BabyEvent e in this.Events) {
 				EventJSON.Append (prefix );
-				EventJSON.Append (e.ToJSON () + ",");
+				EventJSON.Append (e.ToJSON ());
 				prefix = ",";
 			}
 
@@ -60,18 +61,19 @@ namespace BabyData.Data
 			"\"name\":\"{1}\"," +
 			"\"image\":\"{2}\"," +
 			"\"sex\":\"{3}\"," +
-			"\"dateofbirth\":{4:yyyy-MM-dd hh:mm:ss zzz}\"," +
+			"\"dateofbirth\":\"{4:yyyy-MM-dd hh:mm:ss zzz}\"," +
 			"\"public\":\"{5}\"," +
-			"\"events\":[{6}]," +
-			"\"permissions\":[{7}]}}", 
+			"\"events\":[{7}]," +
+			"\"permissions\":[{6}]}}", 
 
-				this.Id, 
+				ToURLSafeBase64(this.Id), 
 				this.Name,
 				this.Image, 
 				this.Sex, 
 				this.DOB,
-				this.IsPublic,//5
-				PermissionJSON, EventJSON
+				this.IsPublic? "Y":"N",//5
+				PermissionJSON, 
+				EventJSON
 			);
 		}
 	}

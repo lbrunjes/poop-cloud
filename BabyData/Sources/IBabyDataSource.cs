@@ -37,6 +37,7 @@ namespace BabyData.Data
 		public int Offset;
 		public string EventType;
 		public Matches Match;
+		public static readonly Filter Empty = new Filter();
 
 		public enum Matches{
 			EQUAL,

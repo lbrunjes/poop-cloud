@@ -21,7 +21,7 @@ FROM Baby
 WHERE Id=@id";
 
 		private static readonly string READ_BABY_PERMISSIONS =@"SELECT 
-Id
+Id,
 Type,
 Username,
 BabyId,
@@ -31,14 +31,13 @@ WHERE BabyId =@id
 ORDER BY Added ASC
 ";
 		private static readonly string READ_BABY_EVENTS =@"SELECT 
-Id
-Type,
+Id,
 Username,
 BabyId,
 Event,
+Reported,
 Details
-Reported
-FROM BabyEvents 
+FROM BabyEvent 
 WHERE BabyId =@id
 ORDER BY Reported DESC";
 		
@@ -65,7 +64,7 @@ BabyId,
 Event,
 Reported,
 Details
-FROM BabyEvents WHERE Id =@id";
+FROM BabyEvent WHERE Id =@id";
 		private static readonly string SAVE_BABYEVENT =@"UPDATE BabyEvent 
 SET
 
@@ -128,8 +127,8 @@ VALUES
 		private static readonly string VERFIY_DB =@"";
 		private static readonly string CREATE_DB =@"";
 
-		private static readonly int BABY_ID_LENGTH = 16;
-
+		private static readonly int BABY_ID_LENGTH = 4;
+		private static string DB_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss zzz";
 		#endregion 
 		private SqliteConnection db =null;
 
@@ -156,19 +155,19 @@ VALUES
 			if (db.State != System.Data.ConnectionState.Open) {
 				db.Open ();
 			}
-			cmd.Parameters.AddWithValue ("@Id", Id);
+			cmd.Parameters.AddWithValue ("@Id", b.FromURLSafeBase64(Id));
 
 			SqliteDataReader r  = cmd.ExecuteReader ();
 
 			if (r.Read ()) {
 				b.Id = Id;
 				b.DOB =  DateTime.ParseExact(r ["DateOfBirth"].ToString (), 
-					"yyyy-MM-dd HH:mm:ss zzz",
+					DB_DATE_FORMAT,
 					CultureInfo.InvariantCulture );;
 				b.Name = r ["Name"].ToString ();
 				b.Image = r ["Image"].ToString ();
 				b.Sex = r ["Sex"].ToString ();
-				b.IsPublic = r ["IsPublic"].ToString () == "Y";
+				b.IsPublic = r ["IsPublic"].ToString () == "1";
 			}
 			r.Close();
 
@@ -186,7 +185,7 @@ VALUES
 			cmd.Parameters.AddWithValue("@name",baby.Name);
 			cmd.Parameters.AddWithValue("@image",baby.Image);
 			cmd.Parameters.AddWithValue("@sex",baby.Sex);
-			cmd.Parameters.AddWithValue("@dateofbirth",baby.DOB.ToString("yyyy-MM-dd HH:mm:ss zzz"));
+			cmd.Parameters.AddWithValue("@dateofbirth",baby.DOB.ToString(DB_DATE_FORMAT));
 			cmd.Parameters.AddWithValue("@ispublic",baby.IsPublic);
 
 			int items = cmd.ExecuteNonQuery();
@@ -217,11 +216,20 @@ VALUES
 			cmd.Parameters.AddWithValue("@name",b.Name);
 			cmd.Parameters.AddWithValue("@image",b.Image);
 			cmd.Parameters.AddWithValue("@sex",b.Sex);
-			cmd.Parameters.AddWithValue("@dateofbirth",b.DOB.ToString("yyyy-MM-dd HH:mm:ss zzz"));
+			cmd.Parameters.AddWithValue("@dateofbirth",b.DOB.ToString(DB_DATE_FORMAT));
 			cmd.Parameters.AddWithValue("@ispublic",b.IsPublic);
 
-			bool saved = SaveBaby (b, user);
+			bool saved = cmd.ExecuteNonQuery () > 0;
 			if (saved) {
+
+				Permission p = new Permission (b.Id,user.Username,Permission.Types.PARENT);
+				this.CreatePermission (p,user);
+				b.Permissions.Add (p);
+
+				BabyEvent be = new BabyEvent (b.Id, user.Username, "CREATED");
+				this.CreateBabyEvent (be, user);
+				b.Events.Add (be);
+
 				return b;
 			}
 			return new Baby();
@@ -244,7 +252,7 @@ VALUES
 			SqliteDataReader r  = cmd.ExecuteReader ();
 
 			if (r.Read ()) {
-				be.Id = Id;
+				be.Id = int.Parse (r ["Id"].ToString ());
 				be.ReportUser = r ["Username"].ToString();
 				be.BabyId = r ["BabyId"].ToString();
 				be.ReportTime = DateTime.Parse (r ["Reported"].ToString ());
@@ -264,7 +272,7 @@ VALUES
 			cmd.Parameters.AddWithValue ("@username", babyevent.ReportUser);
 			cmd.Parameters.AddWithValue ("@babyId", babyevent.BabyId);
 			cmd.Parameters.AddWithValue ("@event", babyevent.Event);
-			cmd.Parameters.AddWithValue ("@reported", babyevent.ReportTime.ToString ("yyyy-MM-dd HH:mm:ss zzz"));
+			cmd.Parameters.AddWithValue ("@reported", babyevent.ReportTime.ToString (DB_DATE_FORMAT));
 			cmd.Parameters.AddWithValue ("@details", babyevent.Details);
 			cmd.Parameters.AddWithValue ("@id", babyevent.Id);
 
@@ -285,7 +293,7 @@ VALUES
 			cmd.Parameters.AddWithValue ("@username", babyevent.ReportUser);
 			cmd.Parameters.AddWithValue ("@babyId", babyevent.BabyId);
 			cmd.Parameters.AddWithValue ("@event", babyevent.Event);
-			cmd.Parameters.AddWithValue ("@reported", babyevent.ReportTime.ToString ("yyyy-MM-dd HH:mm:ss zzz"));
+			cmd.Parameters.AddWithValue ("@reported", babyevent.ReportTime.ToString (DB_DATE_FORMAT));
 			cmd.Parameters.AddWithValue ("@details", babyevent.Details);
 
 			bool saved = cmd.ExecuteNonQuery () > 0;
@@ -312,7 +320,7 @@ VALUES
 			if (r.Read ()) {
 				p.Id = Id;
 				p.Added =  DateTime.ParseExact(r ["Added"].ToString (), 
-					"yyyy-MM-dd HH:mm:ss zzz",
+					DB_DATE_FORMAT,
 					CultureInfo.InvariantCulture );
 				p.BabyId = r ["BabyId"].ToString ();
 				p.Type = (Permission.Types)int.Parse (r ["Type"].ToString ());
@@ -333,7 +341,7 @@ VALUES
 			cmd.Parameters.AddWithValue ("@type", permission.Type);
 			cmd.Parameters.AddWithValue("@username",permission.Username);
 			cmd.Parameters.AddWithValue("@babyid",permission.BabyId);
-			cmd.Parameters.AddWithValue("@added",permission.Added.ToString("yyyy-MM-dd HH:mm:ss zzz"));
+			cmd.Parameters.AddWithValue("@added",permission.Added.ToString(DB_DATE_FORMAT));
 			cmd.Parameters.AddWithValue("@id",permission.Id);
 
 			int items = cmd.ExecuteNonQuery();
@@ -350,10 +358,10 @@ VALUES
 			if (db.State != System.Data.ConnectionState.Open) {
 				db.Open ();
 			}
-			cmd.Parameters.AddWithValue ("@type", permission.Type);
+			cmd.Parameters.AddWithValue ("@type", (int)permission.Type);
 			cmd.Parameters.AddWithValue("@username",permission.Username);
 			cmd.Parameters.AddWithValue("@babyid",permission.BabyId);
-			cmd.Parameters.AddWithValue("@added",permission.Added.ToString("yyyy-MM-dd HH:mm:ss zzz"));
+			cmd.Parameters.AddWithValue("@added",permission.Added.ToString(DB_DATE_FORMAT));
 
 
 			bool saved = cmd.ExecuteNonQuery () > 0;
@@ -386,7 +394,7 @@ VALUES
 				u.Salt = r ["Salt"].ToString ();
 				u.Image = r ["Image"].ToString ();
 				u.Joined = DateTime.ParseExact(r ["Joined"].ToString (),
-					"yyyy-MM-dd HH:mm:ss zzz",
+					DB_DATE_FORMAT,
 					CultureInfo.InvariantCulture );
 				u.Role = (User.Roles)int.Parse (r ["Role"].ToString());
 				u.Flag = (User.Flags)int.Parse (r ["Flag"].ToString());
@@ -432,7 +440,7 @@ VALUES
 			cmd.Parameters.AddWithValue ("@image", target.Image);
 			cmd.Parameters.AddWithValue ("@role", (int)target.Role);
 			cmd.Parameters.AddWithValue ("@flag", (int)target.Flag);
-			cmd.Parameters.AddWithValue ("@joined", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss zzz"));
+			cmd.Parameters.AddWithValue ("@joined", DateTime.Now.ToString(DB_DATE_FORMAT));
 
 
 			int saved = cmd.ExecuteNonQuery ();
@@ -447,27 +455,7 @@ VALUES
 
 		public List<BabyEvent> GetEventsForBaby(Baby baby, User user){
 
-			List<BabyEvent> Events = new List<BabyEvent> ();
-
-			SqliteCommand cmd = new SqliteCommand (READ_BABY_EVENTS, this.db);
-
-			cmd.Parameters.AddWithValue ("@id", baby.Id);
-
-			SqliteDataReader r = cmd.ExecuteReader ();
-			while (r.Read ()) {
-				BabyEvent be = new BabyEvent ();
-
-				be.Id = int.Parse (r ["Id"].ToString ());
-				be.ReportUser = r ["Username"].ToString ();
-				be.BabyId = r ["BabyId"].ToString ();
-				be.ReportTime = DateTime.Parse (r ["Reported"].ToString ());
-				be.Event = r ["event"].ToString ();
-				be.Details = r ["details"].ToString ();
-
-				Events.Add (be);
-			}
-			r.Close ();
-			return Events;
+			return GetEventsForBaby (baby, user, Filter.Empty);
 		}
 
 		public List<Permission> GetPermissionsForBaby(Baby baby, User user){
@@ -481,9 +469,9 @@ VALUES
 			while (r.Read ()) {
 				Permission p = new Permission ();
 
-				p.Id = int.Parse (r ["Id"].ToString ());
+				 int.TryParse (r ["Id"].ToString (),out p.Id);
 				p.Added =  DateTime.ParseExact(r ["Added"].ToString (), 
-					"yyyy-MM-dd HH:mm:ss zzz",
+					DB_DATE_FORMAT,
 					CultureInfo.InvariantCulture );
 				p.BabyId = r ["BabyId"].ToString ();
 				p.Type = (Permission.Types)int.Parse (r ["Type"].ToString ());
@@ -495,7 +483,7 @@ VALUES
 			return Permissions;
 		}
 
-		public List<BabyEvent> GetEventsForBaby(Baby baby, User user ,Filter filter){
+				public List<BabyEvent> GetEventsForBaby(Baby baby, User user ,Filter filter){
 			List<BabyEvent> Events = new List<BabyEvent> ();
 
 			SqliteCommand cmd = new SqliteCommand (READ_BABY_EVENTS, this.db);
@@ -549,14 +537,14 @@ VALUES
 			while (r.Read ()) {
 				BabyEvent be = new BabyEvent ();
 
-				be.Id = int.Parse (r ["Id"].ToString ());
+				int.TryParse (r ["Id"].ToString (),out be.Id  );
 				be.ReportUser = r ["Username"].ToString ();
 				be.BabyId = r ["BabyId"].ToString ();
 				be.ReportTime =  DateTime.ParseExact(r ["Reported"].ToString (),
-					"yyyy-MM-dd HH:mm:ss zzz",
+					DB_DATE_FORMAT,
 					CultureInfo.InvariantCulture );
-				be.Event = r ["event"].ToString ();
-				be.Details = r ["details"].ToString ();
+				be.Event = r ["Event"].ToString ();
+				be.Details = r ["Details"].ToString ();
 
 				Events.Add (be);
 			}

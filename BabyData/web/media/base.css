@@ -1,6 +1,6 @@
 
 body{
-	font-family: Helvetica, Ubuntu, Arial, sans-serif;
+	font-family: Ubuntu, Arial, sans-serif;
 	font-size:16px;
 	line-height: 1.4;
 }
@@ -145,7 +145,6 @@ button{
 	text-align: center;
 	border-radius: 4px;
 	display:inline-block;
-	background: #adf;
 }
 
 /*shortcut classes */

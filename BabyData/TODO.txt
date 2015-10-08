@@ -1,9 +1,13 @@
 ﻿FEATURES TO ADD TO THE BACKEND
  - Password reset via email.
  - Account locking.
+ - Automatically add permissions toa dded baby for users creating them. 
+ - SORT OUT PREMISSION System a bit  basically make it Use users and objects instead of raw data.
+ - enable edit for be and p.
 
 FRONTEND
- - IMPLEMENT 
+ - IMPLEMENT FORM FOR ADDING EVENTS
+
 
 TESTS
  -IMPLMENT

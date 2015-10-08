@@ -13,8 +13,14 @@ namespace BabyData.Data
 		public string BabyId;
 		public string Username;
 		public int Id;
-		public DateTime Added;
+		public DateTime Added =DateTime.Now;
 
+		public Permission(){}
+		public Permission(string babyId, string username, Types type){
+			this.Type= type;
+			this.Username = username;
+			this.BabyId= babyId;
+		}
 		public override string ToJSON ()
 		{
 			return string.Format ("{{" +
@@ -23,7 +29,7 @@ namespace BabyData.Data
 				"\"user\":\"{2}\"," +
 				"\"added\":\"{3:yyyy-MM-dd hh:mm:ss zzz}\"}}",
 				this.Type,
-				this.BabyId,
+				this.ToURLSafeBase64(this.BabyId),
 				this.Username,
 				this.Added);
 		}

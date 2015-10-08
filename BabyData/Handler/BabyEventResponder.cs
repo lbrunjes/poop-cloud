@@ -10,13 +10,6 @@ namespace BabyData
 			System.Web.HttpRequest request, 
 			IBabyDataSource DataSource)
 		{
-	
-//			bool okay = base.HasPermision (user, request, DataSource);
-//			if (!okay) {
-//				//check for things
-//
-//
-//			}
 			return true;
 		}
 		public override void RespondToRequest (User user,
@@ -25,37 +18,41 @@ namespace BabyData
 			IBabyDataSource DataSource)
 		{
 			Baby b;
-			switch (request.HttpMethod.ToUpper()) {
+			if (!String.IsNullOrEmpty (request ["id"])) {
+				b = DataSource.ReadBaby (request ["id"], user);
+				if (b.HasPermission (user.Username, Permission.Types.READ)) {
 
-			case "GET":
+					switch (request.HttpMethod.ToUpper ()) {
 
-				if (!String.IsNullOrEmpty(request ["id"])) {
-					b = DataSource.ReadBaby (request ["id"], user);
-
-					if (b.HasPermission (user.Username, Permission.Types.READ)) {
+					case "GET":
 						b.Events = DataSource.GetEventsForBaby (b, user);
 						response.Write (b.ToJSON ());
-					} else {
-						throw new AuthException ("You don't have permission to view this baby's data");
+						break;
+
+					case "POST":
+						BabyEvent be = new BabyEvent (
+							               b.Id,
+							               user.Username,
+							               String.IsNullOrEmpty (request ["event"]) ? "UNKNOWN" : request ["event"],
+							               String.IsNullOrEmpty (request ["details"]) ? "" : request ["details"]);
+						be = DataSource.CreateBabyEvent (be, user);
+						b.Events.Add (be);
+						response.Write (b.ToJSON());
+
+						break;
+					default:
+						throw new NotSupportedException ("Unsupported HTTP Method");
+						break;
+
 					}
+				
 				} else {
-					throw new ArgumentNullException ("Baby id not specified");
+					throw new AuthException ("You don't have permission to view this baby's data");
 				}
-
-				break;
-
-			case "POST":
-
-
-
-
-				break;
-			default:
-				throw new NotSupportedException ("Unsupported HTTP Method");
-				break;
-
 			}
-
+			else {
+				throw new ArgumentNullException ("Baby id not specified");
+			}
 	
 		}
 	}

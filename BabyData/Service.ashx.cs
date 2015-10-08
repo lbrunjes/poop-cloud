@@ -37,10 +37,13 @@ namespace BabyData
 					string key = context.Request ["type"];
 
 					//is that supported? Can we do that?
-					if (Responders.ContainsKey (key)&&
-						Responders[key].HasPermision(LoggedIn, context.Request,Sql)
-					) {
-						Responders [key].RespondToRequest (LoggedIn, context.Request, context.Response, Sql);
+					if (Responders.ContainsKey (key)){
+						if(Responders[key].HasPermision(LoggedIn, context.Request,Sql)) {
+							Responders [key].RespondToRequest (LoggedIn, context.Request, context.Response, Sql);
+						}
+						else{
+							throw new AuthException("Access was Denied, Chief.");
+						}
 					}
 					else{
 						throw new NotSupportedException(" Your request is not supported, yet:(");	
@@ -70,6 +73,8 @@ namespace BabyData
 			{"permissions", new PermissionResponder()},
 			{"user", new UserResponder()}
 		};
+
+
 	}
 }
 	

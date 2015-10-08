@@ -37,9 +37,7 @@ button.active
 	border-width: 1px;
 	border-style: solid;
 	border-radius:4px;
-	padding: 0 0 0 64px;
-	background-position: left center;
-	background-repeat: no-repeat;
+
 	height:64px;
 	overflow:hidden;
 }
@@ -59,13 +57,29 @@ button.active
 .feeding{
 	border-color: #f00;
 	background-image:url("bg_feed.png");
+	background-color: #600;
+	color:#fff;
+		padding: 0 0 0 64px;
+	background-position: left center;
+	background-repeat: no-repeat;
 }
 .diaper{
 	border-color: #0f0;
 	background-image:url("bg_diaper.png");
+	background-color: #060;
+	color:#fff;
+		padding: 0 0 0 64px;
+	background-position: left center;
+	background-repeat: no-repeat;
+
 }
 .sleep{
 	border-color: #00f;
-	
+	background-color: #006;
 	background-image:url("bg_sleep.png");
+	color:#fff;
+		padding: 0 0 0 64px;
+	background-position: left center;
+	background-repeat: no-repeat;
+
 }

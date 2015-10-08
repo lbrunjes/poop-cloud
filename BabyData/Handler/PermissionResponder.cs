@@ -10,11 +10,7 @@ namespace BabyData
 			System.Web.HttpRequest request, 
 			IBabyDataSource DataSource)
 		{
-			bool okay = base.HasPermision (user, request, DataSource);
-			if (!okay) {
-				//check for things
-			}
-			return okay;
+			return true;
 		}
 		public override void RespondToRequest (User user,
 			System.Web.HttpRequest request, 
@@ -22,48 +18,41 @@ namespace BabyData
 			IBabyDataSource DataSource)
 		{
 			Baby b;
-			switch (request.HttpMethod.ToUpper()) {
 
-			case "GET":
+			if (!String.IsNullOrEmpty(request ["id"])) {
+				b = DataSource.ReadBaby (request ["id"], user);
 
-				if (!String.IsNullOrEmpty(request ["id"])) {
-					b = DataSource.ReadBaby (request ["id"], user);
+				if (b.HasPermission (user.Username, Permission.Types.READ)) {
 
-					if (b.HasPermission (user.Username, Permission.Types.READ)) {
+					switch (request.HttpMethod.ToUpper()) {
+
+					case "GET":
 						b.Permissions = DataSource.GetPermissionsForBaby (b, user);
 						response.Write (b.ToJSON ());
-					} else {
-						throw new AuthException ("You don't have permission to view this baby's data");
+						break;
+
+					case "POST":
+
+						//TODO CHECKPERMISSIONS
+						Permission p = new Permission ();
+						p.BabyId = b.Id;
+						p.Username = request ["username"];
+						Enum.TryParse<Permission.Types> (request ["type"], out p.Type);
+
+						p = DataSource.CreatePermission (p, user);
+						b.Permissions.Add (p);
+						response.Write(b.ToJSON());
+						break;
+					default:
+						throw new NotSupportedException ("Unsupported HTTP Method");
+						break;
+
 					}
 				} else {
-					throw new ArgumentNullException ("Baby id not specified");
+					throw new AuthException ("You don't have permission to view this baby's data");
 				}
-
-				break;
-
-			case "POST":
-
-				b = new Baby();
-				b.Name = request["name"];
-				b.Sex = request["sex"];
-				b.IsPublic = request["public"] =="Y";
-				DateTime.TryParse(request["dob"], out b.DOB);
-				b.Image = request["image"];
-
-				if(String.IsNullOrEmpty(request["id"])){
-					Baby fromDb = DataSource.CreateBaby(b,user);
-					response.Write (fromDb.ToJSON ());
-				}
-				else{
-					DataSource.SaveBaby(b, user);
-				}
-
-
-				break;
-			default:
-				throw new NotSupportedException ("Unsupported HTTP Method");
-				break;
-
+			} else {
+				throw new ArgumentNullException ("Baby id not specified");
 			}
 		}
 	}

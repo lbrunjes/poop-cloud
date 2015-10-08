@@ -34,7 +34,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="Mono.Data.Sqlite" />
   </ItemGroup>
@@ -87,6 +86,12 @@
     <Content Include="web\index.html" />
     <Content Include="web\media\mobile.css" />
     <Content Include="web\media\web.css" />
+    <Content Include="web\forms.html" />
+    <Content Include="web\media\base.css" />
+    <Content Include="web\media\bg_diaper.png" />
+    <Content Include="web\media\bg_feed.png" />
+    <Content Include="web\media\bg_sleep.png" />
+    <Content Include="web\media\charts.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TODO.txt" />
