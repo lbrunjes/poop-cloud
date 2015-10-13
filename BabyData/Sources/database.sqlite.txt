@@ -43,5 +43,16 @@ CREATE TABLE Permission(
   );
 
 
---sqlite> SELECT * from user;
---admin|fake@fake.com|Q7RZAogZTukpGF6IFzZiFhcIvnvd/xyUbQDGfqMOdD6ohkSkudcPwTxP7Tps1Vs7zOU4UwZdpIr/9IJLNTUuCA==|3JiSKXgOhKkunYxYwyoc9SRelM0||1|0|2015-10-13 13:46:18 -04:00
+--create one admin user. password is password... 
+  INSERT INTO USER (
+  Username, Email, Salt, Hash, Image, Role, Flag, Joined
+  )VALUES(
+'admin',
+'admin@fake.com',
+'Q7RZAogZTukpGF6IFzZiFhcIvnvd/xyUbQDGfqMOdD6ohkSkudcPwTxP7Tps1Vs7zOU4UwZdpIr/9IJLNTUuCA==',
+'3JiSKXgOhKkunYxYwyoc9SRelM0',
+2,
+0,
+'2015-10-13 13:46:18 -04:00'   
+);
+

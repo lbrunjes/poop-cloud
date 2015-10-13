@@ -20,8 +20,8 @@
 			bD.dataset("feeding",[2,1,4]),
 			bD.dataset("sleep",[12,11,14]),
 			] ,{
-				height:document.getElementById("theChart").width,
-				width:document.getElementById("theChart").height/3*2,
+				height:document.getElementById("theChart").height,
+				width:document.getElementById("theChart").width,
 				graph_type:"bar",
 				background:false,
 				label_axis_x:"Number",
@@ -40,6 +40,7 @@
 			this.User={};
 			this.glance = {};
 			this.search = {};
+			this.chartform = {};
 			
 			this.ServiceUrl="../Service.ashx";
 
@@ -59,7 +60,7 @@
 
 					function(response){
 						var events = response.data.events;
-						console.log(events);
+				
 						for(var i =0; i < events.length; i++){
 							babyController.addEvent(events[i]);
 						}
@@ -73,7 +74,8 @@
 					
 				//calculate time_agoago
 			};
-			//sets data for baby
+
+			//adds data to the UI
 			this.addEvent = function(event){
 
 				if(!babyController.baby.events){
@@ -89,9 +91,9 @@
 				}
 
 			};
+
+			//adds data to the db
 			this.reportEvent=function(type, subtype, details){
-
-
 
 				$http.post(this.ServiceUrl+
 					"?type=babyevents"+
@@ -163,16 +165,79 @@
 			};
 
 			//update teh chart
-			this.updateChart=function(days,filters){
+			this.updateChart=function(){
+				if(!this.chartform){
+					console.log("no data to chart");
+					return;
+				}
+
+				console.log("updaing charts with data", this.chartform);
 				//TODO get data from the baby
-				var data= {};
+				
+				var now = new Date();
+				var ms_day = 1000*3600*24;
+				var days = this.chartform.days||1;
+				var ms = ms_day +days;
+				var data = {};
+				var labels =[];
 
-				console.log("updatechart",days, filters);
+				for(var  i = days-1; i >= 0;i--){
+					labels.push(i)//TODOd dates
+				}
 
-//				bD.updateChart(data);
+				
+				for(var key in this.glance){
+					if(this.chartform[key]){
+						var info = [];
+						for(var i = 0; i < days; i++){
+							info.push(0);
+						}
+						data[key] = info;
+					}
+				}
+				console.log(data);
+
+				var evt,ago,tgt;
+				for(var i = 0; i < this.baby.events.length; i++){
+					evt= this.baby.events[i];
+					if(evt.type in data){
+						ago = Math.abs(Date.parse(evt.time) - now);
+						//are we in teh windw
+						
+						if(ago){
+							tgt = Math.floor(days-(ago+1)/ms_day);
+							data[evt.type][tgt]++;
+						}
+					}
+				}
+
+				var dataset =[];
+				for(var key in data){
+					dataset.push({
+						"color": bD.getColorFromString(key),
+						"name":key,
+						"items":data[key],
+						"labels":labels});
+				}	
+				console.log("datset",dataset);
+
+			
+
+				
+				bD.updateChart(dataset,
+					{
+						height:document.getElementById("chart").height,
+						width:document.getElementById("chart").width,
+						graph_type:days<7?"bar":"line",
+						background:false,
+						label_axis_x:"Number",
+						label_axis_y:"Days Ago",
+						title:"Events by type for Last "+days + " days"
+					}
+				);
 			};
-			//turn time stamp into a time ago
 
+			//turn time stamp into a time ago by major type
 			this.getAgo=function(timestamp){
 				var ts = Math.abs(Date.parse(timestamp) - new Date());
 			
@@ -199,7 +264,7 @@
 				return ts;
 			};
 
-			//this is where we 
+			//twhat it says
 			this.readQueryString = function(){
 				var search = {};
 				var query = unescape(window.location.search.substring(1)).split("&");
@@ -221,6 +286,9 @@
 </head>
 <body ng-controller="babyController as bC" >
 	<header id="baby-header">
+		<div id="user">
+			
+		</div>
 		<h1>{{bC.baby.name}}</h1>
 		<nav id="action-bar">
 			<button class="diaper" ng-click="bC.reportEvent('diaper','poo')">DIAPER<br/>Poo </button>
@@ -264,21 +332,33 @@
 		</div>
 		<div id="chart"  class="tab hide">
 			<h2>Chart</h2>
-			<p>DATA VIS</p>
+			
+			<form novalidate>
+				<p>Include:</p>
+				<div id="filters" ng-repeat="event in bC.glance">
+					<label for="{{event.type}}">{{event.type.toUpperCase()}}</label>
+					<input name="{{event.type}}" type="checkbox" 
+						checked="true" 
+						ng-model="bC.chartform[event.type]"><br/>
+
+				</div>
+				<label for="days">Show Days</label>
+				<input name="days" type="range" min="1" max="30" value="7" ng-model="bC.chartform.days">
+				<span>{{bC.chartform.days}}</span><br/>
+
+			
+				<label for="submit">&nbsp;</label>
+				<input name="submit" type="submit" ng-click="bC.updateChart(bC.chartdata)"><br/>
+				
+			</form>
 			<canvas id="theChart" width="640" height="480"></canvas>
-			<div id="filters">
-			 filters go here.
-			</div>
-			<button ng-click="bC.updateChart(1)">TODAY</button>
-				<button ng-click="bC.updateChart(2)">YESTERDAY</button>
-				<button ng-click="bC.updateChart(7)">WEEK</button>
-				<button ng-click="bC.updateChart(28)">MONTH</button>
-				<button ng-click="bC.updateChart(-1)">ALL</button>
-			</div>
+		</div>
+			
 
 		<div id="glance" class="tab show">
 			<h2>At a Glance</h2>
-			<div id="glance-list" ng-repeat="event in bC.glance| orderBy:'-time'">
+
+			<div id="glance-list" ng-repeat="event in bC.glance">
 				<div class="event {{event.type.toLowerCase()}}" id ="event-{{event.id}}">
 					<div class="chunk time" timestamp="{{event.time}}">
 						<p>{{bC.getAgo(event.time);}}</p>

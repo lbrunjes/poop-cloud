@@ -39,10 +39,11 @@ button.active
 	overflow:hidden;
 }
 #events-list .event h3,#events-list .event p{
-	margin:0;
+	margin:0 0 4px; 0
 }
 .event {
 	padding: 0 0 0 64px;
+	margin-bottom:4px;
 }
 
 .feeding{
