@@ -212,7 +212,7 @@ VALUES
 				byte[] id =new byte[BABY_ID_LENGTH];
 				r.NextBytes (id);
 				b.Id = Convert.ToBase64String (id)
-					.Replace ('+', '#')
+					.Replace ('+', '-')
 					.Replace('/','_')
 					.TrimEnd(new char[]{'='});
 				cmd.Parameters.AddWithValue ("@Id",b.Id);

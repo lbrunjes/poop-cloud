@@ -112,7 +112,7 @@ var babyData = function(id){
 			line_round_at:10,
 			range_multiplier: 1.5,
 			line_at_zero:true, //TODO
-			line_weight:2,
+			line_weight:3,
 
 			key:true,
 
