@@ -9,34 +9,39 @@ namespace BabyData.Data
 		public string ReportUser;
 		public string BabyId;
 		public int Id;
-		public string Event;
+		public string Type;
+		public string Subtype;
 		public string Details;
 
 		public BabyEvent ()
 		{
 		}
-		public BabyEvent(string babyId, string username, string eventname, string details = ""){
+		public BabyEvent(string babyId, string username, string eventname, string subtype ="", string details = ""){
 			BabyId = babyId;
 			ReportUser = username;
-			Event = eventname;
+			Type = eventname;
+			Subtype = subtype;
 			Details = details;
 		}
 		 public override string ToJSON ()
 		{
 			return string.Format ("{{" +
-				"\"id\":\"{0}\"," +
-				"\"baby\":\"{1}\"," +
-				"\"event\":\"{2}\"," +
+//				"\"id\":\"{0}\"," +
+//				"\"baby\":\"{1}\"," +
+				"\"type\":\"{2}\"," +
+				"\"subtype\":\"{6}\"," +
 				"\"user\":\"{3}\"," +
-				"\"time\":\"{4:yyyy-MM-dd hh:mm:ss zzz}\"," +
+				"\"time\":\"{4:yyyy-MM-dd HH:mm:ss zzz}\"," +
 				"\"details\":\"{5}\"" +
 				"}}", 
 				this.Id,
-				this.ToURLSafeBase64(this.BabyId), 
-				this.Event, 
+				this.BabyId, 
+				this.Type, 
 				this.ReportUser, 
 				this.ReportTime,
-				this.Details);
+				this.Details,//5
+				this.Subtype
+			);
 		}
 	}
 }

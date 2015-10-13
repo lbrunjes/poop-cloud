@@ -54,7 +54,7 @@ namespace BabyData
 			catch(Exception ex){
 				context.Response.StatusCode = 500;
 				context.Response.Write(String.Format(
-					@"{{server_error:{{""message"":""{0}"",""type"":""{1}""}}}}", 
+					@"{{""server_error"":{{""message"":""{0}"",""type"":""{1}""}}}}", 
 					ex.Message, ex.GetType()));
 			}
 

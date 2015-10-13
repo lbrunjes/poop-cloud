@@ -4,12 +4,12 @@ body{
 	font-size:16px;
 	line-height: 1.4;
 }
-/* text eleements*/
+/* text elements*/
 span{
 
 }
-a{
-
+a, button{
+cursor:pointer;
 }
 q{
 
@@ -121,21 +121,13 @@ tfoot,tbody,thead{
 
 
 /*media elements*/
-video{
-	border:1px solid #fee;
-}
-audio{
-	border:1px solid #efe;
-}
-canvas{
-	border:1px solid #eef;
-}
-iframe{
-	border:1px solid #000;
-}
-img{
+video,audio,canvas,img{
 	border: none;
 }
+iframe{
+	border:1px solid #f00;
+}
+
 /*form elements*/
 button{
 	min-height: 48px;
@@ -158,11 +150,11 @@ small, .small{
 	color: #666;
 }
 .warning{
-	background:#ff0;
+	background:#ff0!important;
 	color:#000;
 }
 .error{
-	background:#ff0;
+	background:#f00!important;
 	color:#000;
 }
 .success{

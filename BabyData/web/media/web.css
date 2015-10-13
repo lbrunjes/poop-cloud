@@ -1,8 +1,6 @@
 ﻿
 #baby-header{
-	position:fixed;
-	top:0;
-	height:128px;
+	
 	background: #333;
 	width:100%;
 	text-align:center;
@@ -17,7 +15,6 @@ height:64px;
 
 }
 body{
-	margin-top:128px;
 	background:#222;;
 	color:#fff;
 }
@@ -44,14 +41,8 @@ button.active
 #events-list .event h3,#events-list .event p{
 	margin:0;
 }
-#events-list .event .chunk{
-	display:inline-block;
-	padding: 0 8px;
-	vertical-align: middle;
-	text-align: center;
-	border-left :1px solid #fff;
-	height:64px;
-	min-width:96px;
+.event {
+	padding: 0 0 0 64px;
 }
 
 .feeding{

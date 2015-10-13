@@ -8,16 +8,10 @@ namespace BabyData
 		public override bool HasPermision (
 			User user, 
 			System.Web.HttpRequest request, 
-			IBabyDataSource DataSource)
+			IBabyDataSource DataSource,
+			Permission.Types type = Permission.Types.READ
+		)
 		{
-//			bool okay = base.HasPermision (user, request, DataSource);
-//			if (!okay) {
-//				if (request.HttpMethod == "GET") {
-//					okay = true;
-//				} else {
-//					okay = user.Username == request ["id"];
-//				}
-//			}
 			return true;
 		}
 		public override void RespondToRequest (User user,

@@ -8,7 +8,9 @@ namespace BabyData
 	{
 		public override bool HasPermision (User user, 
 			System.Web.HttpRequest request, 
-			IBabyDataSource DataSource)
+			IBabyDataSource DataSource,
+			Permission.Types type = Permission.Types.READ
+		)
 		{
 			bool okay = base.HasPermision (user, request, DataSource);
 			if (!okay) {
@@ -31,14 +33,17 @@ namespace BabyData
 			System.Web.HttpResponse response, 
 			IBabyDataSource DataSource)
 		{
-			Baby b;
+			Baby b=null;
+			if (!String.IsNullOrEmpty (request ["id"])) {
+				b = DataSource.ReadBaby (request ["id"], user);
+			}
+
+
 			switch (request.HttpMethod.ToUpper()) {
 
 			case "GET":
 				
-				if (!String.IsNullOrEmpty(request ["id"])) {
-					b = DataSource.ReadBaby (request ["id"], user);
-
+				if(b!=null){
 					if (b.HasPermission (user.Username, Permission.Types.READ)) {
 //						b.Permissions = DataSource.GetPermissionsForBaby (b, user);
 //						b.Events = DataSource.GetEventsForBaby (b, user);
@@ -53,7 +58,7 @@ namespace BabyData
 				break;
 
 			case "POST":
-				
+
 				b = new Baby();
 				b.Name = request["name"];
 				b.Sex = request["sex"];
@@ -67,8 +72,12 @@ namespace BabyData
 					response.Write (fromDb.ToJSON ());
 				}
 				else{
-					b.Id = request ["id"];
-						DataSource.SaveBaby(b, user);
+					if (b.HasPermission (user.Username, Permission.Types.PARENT)) {
+						b.Id = request ["id"];
+						DataSource.SaveBaby (b, user);
+					} else {
+						throw new AuthException ("Only users with the parent role can update baby details.");
+					}
 				}
 
 

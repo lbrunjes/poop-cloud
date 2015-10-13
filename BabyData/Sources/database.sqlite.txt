@@ -1,85 +1,47 @@
-﻿SELECT 'START' FROM sqite_master;
+﻿SELECT 'START' FROM sqlite_master;
 CREATE TABLE User(
-	Username 	CHAR(255) 	NOT NULL 	UNIQUE,
-	Email 		CHAR(255) 	NOT NULL,
-	Salt 		CHAR(255) 	NOT NULL,
-	Hash 		CHAR(255) 	NOT NULL,
-	Image 		CHAR(1024),
-	Role 		INT,
-	Flag 		INT,
-	Joined 		CHAR(25) 	NOT NULL
-	);
+  Username   CHAR(255)   NOT NULL   UNIQUE,
+  Email     CHAR(255)   NOT NULL,
+  Salt     CHAR(255)   NOT NULL,
+  Hash     CHAR(255)   NOT NULL,
+  Image     CHAR(1024),
+  Role     INT,
+  Flag     INT,
+  Joined     CHAR(25)   NOT NULL
+  );
 
 CREATE TABLE Baby(
-	Id	 	CHAR(255) 	PRIMARY KEY ASC,
-	Name	CHAR(255),
-	Image	CHAR(1024),
-	Sex		CHAR(1),
-	DateOfBirth CHAR(25),
-	IsPublic CHAR(1)
+  Id      CHAR(255)    PRIMARY KEY,
+  Name   CHAR(255),
+  Image   CHAR(1024),
+  Sex     CHAR(1),
+  DateOfBirth  CHAR(25),
+  IsPublic  CHAR(1)
 
-	);
+  );
 
 CREATE TABLE BabyEvent(
-	Id 			INT			PRIMARY KEY ASC,
-	Reported  	CHAR(25) 	NOT NULL,
-	BabyId	 	CHAR(255)	NOT NULL,
-	Event 		CHAR(255) 	NOT NULL,
-	Details 		TEXT 		NOT NULL,
-	Username 	CHAR(255) 	NOT NULL,
-	FOREIGN KEY(BabyId) REFERENCES Baby(Id),
-	FOREIGN KEY(Username) REFERENCES User(Username)
-	);
+  Id       INT        PRIMARY KEY ASC,
+  Reported    CHAR(25)   NOT NULL,
+  BabyId     CHAR(255)  NOT NULL,
+  Type     CHAR(255)   NOT NULL,
+  Subtype     CHAR(255)   NOT NULL,
+  Details     TEXT     NOT NULL,
+  Username   CHAR(255)   NOT NULL,
+  FOREIGN KEY(BabyId) REFERENCES Baby(Id),
+  FOREIGN KEY(Username) REFERENCES User(Username)
+  );
 
 CREATE TABLE Permission(
-	Id			INT			PRIMARY KEY ASC,
-	Type 		INT		 	NOT NULL,
-	Username	CHAR(255)	NOT NULL,
-	BabyId		CHAR(255)	NOT NULL,
-	Added 	CHAR(25) 	NOT NULL,
-	FOREIGN KEY(BabyId) REFERENCES Baby(Id),
-	FOREIGN KEY(Username) REFERENCES User(Username)
-	);
+  Id      INT       PRIMARY KEY ASC,
+  Type     INT       NOT NULL,
+  Username  CHAR(255)  NOT NULL,
+  BabyId    CHAR(255)  NOT NULL,
+  Added   CHAR(25)   NOT NULL,
+  FOREIGN KEY(BabyId) REFERENCES Baby(Id),
+  FOREIGN KEY(Username) REFERENCES User(Username)
+  );
 
---user
-INSERT INTO User(
-Username,
-	Email,
-	Salt,
-	Hash,
-	Image
-	Role,
-	Flag,
-	Joined
-)
-VALUES(
-'admin',
-'admin@fake.com',
-'1e5THM6Xsn/FVrn2l1WP/7JoPwaVzXbeEOqwYNXXCig0IG8M2gCkShiRO+gdfmWywVDTqQBkvFVsDSH+l2wzAQ==',
-'ePVyhC7ODD2SiMjnr9C1CymxHj0=',
-1,
-0,
-'2015-10-02 20:31:55 -04:00');
 
---BABY
-INSERT INTO BABY (Id,NAME, Image, Sex, DateOfBirth, IsPublic)
-'Kq9lAQ==',
-'TEST BABY PLEASE IGNORE',
-'http://a.dilcdn.com/bl/wp-content/uploads/sites/8/2014/09/babygirlnames.jpg',
-'F',
-'2016-01-06 00:00:00 -05:00',
-'1');
-
---PERMISSION
-
-INSERT INTO PERMISSION (Type ,
-	Username,
-	BabyId,
-	Added 
-)
-VALUES(
-	4,
-	'admin',
-	'Kq9lAQ==',
-	'2015-10-02 22:23:04 -04:00'
-);
+--sqlite> SELECT * from user;
+--admin|fake@fake.com|Q7RZAogZTukpGF6IFzZiFhcIvnvd/xyUbQDGfqMOdD6ohkSkudcPwTxP7Tps1Vs7zOU4UwZdpIr/9IJLNTUuCA==|3JiSKXgOhKkunYxYwyoc9SRelM0||1|0|2015-10-13 13:46:18 -04:00

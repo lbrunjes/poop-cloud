@@ -34,7 +34,8 @@ ORDER BY Added ASC
 Id,
 Username,
 BabyId,
-Event,
+Type, 
+Subtype,
 Reported,
 Details
 FROM BabyEvent 
@@ -61,7 +62,8 @@ VALUES
 Id,
 Username,
 BabyId,
-Event,
+Type,
+Subtype,
 Reported,
 Details
 FROM BabyEvent WHERE Id =@id";
@@ -71,15 +73,16 @@ SET
 
 Username = @username,
 BabyId = @babyid,
-Event = @event,
+Type = @type,
+Subtype =@subtype,
 Reported = @reported,
 Details = @dteails
 
 WHERE Id =@id;";
 		private static readonly string CREATE_BABYEVENT =@"INSERT INTO BabyEvent
-(	Username,	BabyId, 	Event,	Reported, 	Details)
+(	Username,	BabyId, 	Type, 	Subtype,	Reported, 	Details)
 VALUES
-(	@username,	@babyId,	@event,	@reported,	@details)
+(	@username,	@babyId,	@type,	@subtype,	@reported,	@details)
 		
 ";
 
@@ -124,8 +127,6 @@ Username=@username;";
 VALUES
 (@username,	@email,	@salt,	@hash,	@image,	@role,	@flag,	@joined)";
 
-		private static readonly string VERFIY_DB =@"";
-		private static readonly string CREATE_DB =@"";
 
 		private static readonly int BABY_ID_LENGTH = 4;
 		private static string DB_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss zzz";
@@ -155,23 +156,25 @@ VALUES
 			if (db.State != System.Data.ConnectionState.Open) {
 				db.Open ();
 			}
-			cmd.Parameters.AddWithValue ("@Id", b.FromURLSafeBase64(Id));
+			cmd.Parameters.AddWithValue ("@Id", Id);
 
 			SqliteDataReader r  = cmd.ExecuteReader ();
 
 			if (r.Read ()) {
 				b.Id = Id;
-				b.DOB =  DateTime.ParseExact(r ["DateOfBirth"].ToString (), 
+				b.DOB = DateTime.ParseExact (r ["DateOfBirth"].ToString (), 
 					DB_DATE_FORMAT,
-					CultureInfo.InvariantCulture );;
+					CultureInfo.InvariantCulture);
+
 				b.Name = r ["Name"].ToString ();
 				b.Image = r ["Image"].ToString ();
 				b.Sex = r ["Sex"].ToString ();
 				b.IsPublic = r ["IsPublic"].ToString () == "1";
+			} else {
+				throw new ArgumentException ("No baby found for that id. ");
 			}
 			r.Close();
 
-			//only get teh full baby details if we really want it.
 			return b;
 		}
 		public bool SaveBaby (Baby baby, User user){
@@ -208,8 +211,12 @@ VALUES
 				//TODO Collision Checks
 				byte[] id =new byte[BABY_ID_LENGTH];
 				r.NextBytes (id);
-				cmd.Parameters.AddWithValue ("@Id", Convert.ToBase64String(id));
-				b.Id = Convert.ToBase64String (id);
+				b.Id = Convert.ToBase64String (id)
+					.Replace ('+', '#')
+					.Replace('/','_')
+					.TrimEnd(new char[]{'='});
+				cmd.Parameters.AddWithValue ("@Id",b.Id);
+
 			} else {
 				cmd.Parameters.AddWithValue ("@Id", baby.Id);
 			}
@@ -226,12 +233,13 @@ VALUES
 				this.CreatePermission (p,user);
 				b.Permissions.Add (p);
 
-				BabyEvent be = new BabyEvent (b.Id, user.Username, "CREATED");
+				BabyEvent be = new BabyEvent (b.Id, user.Username, "INFO", "CREATED");
 				this.CreateBabyEvent (be, user);
 				b.Events.Add (be);
 
 				return b;
 			}
+
 			return new Baby();
 
 
@@ -256,7 +264,8 @@ VALUES
 				be.ReportUser = r ["Username"].ToString();
 				be.BabyId = r ["BabyId"].ToString();
 				be.ReportTime = DateTime.Parse (r ["Reported"].ToString ());
-				be.Event = r ["event"].ToString ();
+				be.Type = r ["Type"].ToString ();
+				be.Subtype = r ["Subtype"].ToString ();
 				be.Details = r ["details"].ToString ();
 			}
 			r.Close ();
@@ -271,7 +280,8 @@ VALUES
 			}
 			cmd.Parameters.AddWithValue ("@username", babyevent.ReportUser);
 			cmd.Parameters.AddWithValue ("@babyId", babyevent.BabyId);
-			cmd.Parameters.AddWithValue ("@event", babyevent.Event);
+			cmd.Parameters.AddWithValue ("@type", babyevent.Type);
+			cmd.Parameters.AddWithValue ("@subtype", babyevent.Subtype);
 			cmd.Parameters.AddWithValue ("@reported", babyevent.ReportTime.ToString (DB_DATE_FORMAT));
 			cmd.Parameters.AddWithValue ("@details", babyevent.Details);
 			cmd.Parameters.AddWithValue ("@id", babyevent.Id);
@@ -292,7 +302,8 @@ VALUES
 
 			cmd.Parameters.AddWithValue ("@username", babyevent.ReportUser);
 			cmd.Parameters.AddWithValue ("@babyId", babyevent.BabyId);
-			cmd.Parameters.AddWithValue ("@event", babyevent.Event);
+			cmd.Parameters.AddWithValue ("@type", babyevent.Type);
+			cmd.Parameters.AddWithValue ("@subtype", babyevent.Subtype);
 			cmd.Parameters.AddWithValue ("@reported", babyevent.ReportTime.ToString (DB_DATE_FORMAT));
 			cmd.Parameters.AddWithValue ("@details", babyevent.Details);
 
@@ -504,16 +515,16 @@ VALUES
 				switch(filter.Match){
 
 				case Filter.Matches.EQUAL:
-					cmd.CommandText += " AND Event = @event ";
-					cmd.Parameters.AddWithValue ("@event", filter.EventType);
+					cmd.CommandText += " AND Type = @type ";
+					cmd.Parameters.AddWithValue ("@type", filter.EventType);
 					break;
 				case Filter.Matches.LIKE:
-					cmd.CommandText += " AND Event like @event ";
-					cmd.Parameters.AddWithValue ("@event", filter.EventType);
+					cmd.CommandText += " AND Type like @type ";
+					cmd.Parameters.AddWithValue ("@type", filter.EventType);
 					break;
 				case Filter.Matches.NOT_EQUAL:
-					cmd.CommandText += " AND Event like @event ";
-					cmd.Parameters.AddWithValue ("@event", filter.EventType);
+					cmd.CommandText += " AND Type like @type ";
+					cmd.Parameters.AddWithValue ("@type", filter.EventType);
 					break;
 				}
 			}
@@ -540,10 +551,13 @@ VALUES
 				int.TryParse (r ["Id"].ToString (),out be.Id  );
 				be.ReportUser = r ["Username"].ToString ();
 				be.BabyId = r ["BabyId"].ToString ();
-				be.ReportTime =  DateTime.ParseExact(r ["Reported"].ToString (),
+				be.ReportTime  = DateTime.ParseExact(r ["Reported"].ToString (),
 					DB_DATE_FORMAT,
-					CultureInfo.InvariantCulture );
-				be.Event = r ["Event"].ToString ();
+					CultureInfo.InvariantCulture
+
+					);
+				be.Type = r ["Type"].ToString ();
+				be.Subtype = r ["Subtype"].ToString ();
 				be.Details = r ["Details"].ToString ();
 
 				Events.Add (be);

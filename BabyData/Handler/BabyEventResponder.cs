@@ -8,7 +8,8 @@ namespace BabyData
 	{
 		public override bool HasPermision (User user, 
 			System.Web.HttpRequest request, 
-			IBabyDataSource DataSource)
+			IBabyDataSource DataSource,
+			Permission.Types type = Permission.Types.READ)
 		{
 			return true;
 		}
@@ -20,25 +21,35 @@ namespace BabyData
 			Baby b;
 			if (!String.IsNullOrEmpty (request ["id"])) {
 				b = DataSource.ReadBaby (request ["id"], user);
-				if (b.HasPermission (user.Username, Permission.Types.READ)) {
+
 
 					switch (request.HttpMethod.ToUpper ()) {
 
 					case "GET":
-						b.Events = DataSource.GetEventsForBaby (b, user);
-						response.Write (b.ToJSON ());
+						if (b.HasPermission (user.Username, Permission.Types.READ)) {
+							b.Events = DataSource.GetEventsForBaby (b, user);
+							response.Write (b.ToJSON ());
+						} else {
+							throw new AuthException ("You don't have permission to view this baby's data");
+						}
 						break;
 
-					case "POST":
-						BabyEvent be = new BabyEvent (
-							               b.Id,
-							               user.Username,
-							               String.IsNullOrEmpty (request ["event"]) ? "UNKNOWN" : request ["event"],
-							               String.IsNullOrEmpty (request ["details"]) ? "" : request ["details"]);
-						be = DataSource.CreateBabyEvent (be, user);
-						b.Events.Add (be);
-						response.Write (b.ToJSON());
-
+				case "POST":
+					b.Permissions = DataSource.GetPermissionsForBaby (b, user);
+						if(b.HasPermission(user.Username, Permission.Types.UPDATE)){
+							BabyEvent be = new BabyEvent (
+								               b.Id,
+								               user.Username,
+								               String.IsNullOrEmpty (request ["eventtype"]) ? "UNKNOWN" : request ["eventtype"],
+								               String.IsNullOrEmpty (request ["subtype"]) ? "" : request ["subtype"],
+								               String.IsNullOrEmpty (request ["details"]) ? "" : request ["details"]);
+							be = DataSource.CreateBabyEvent (be, user);
+							b.Events.Add (be);
+							response.Write (b.ToJSON());
+						}
+						else {
+							throw new AuthException ("You don't have permission to Update this baby's data");
+						}
 						break;
 					default:
 						throw new NotSupportedException ("Unsupported HTTP Method");
@@ -46,12 +57,10 @@ namespace BabyData
 
 					}
 				
-				} else {
-					throw new AuthException ("You don't have permission to view this baby's data");
-				}
+				
 			}
 			else {
-				throw new ArgumentNullException ("Baby id not specified");
+				throw new ArgumentNullException ("Baby id not specified as 'id'");
 			}
 	
 		}

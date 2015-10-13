@@ -8,7 +8,9 @@ namespace BabyData
 	{
 		public virtual bool HasPermision(User user, 
 			HttpRequest request, 
-			IBabyDataSource DataSource){
+			IBabyDataSource DataSource,
+			Permission.Types type = Permission.Types.READ
+		){
 
 			bool okay = false;
 			if (user.Role == User.Roles.ADMIN) {

@@ -62,7 +62,10 @@ namespace BabyData.Data
 			}
 			var hasher = new Rfc2898DeriveBytes (password, sbytes);
 			hasher.IterationCount =512;
-			return Convert.ToBase64String (hasher.GetBytes (20));
+			return Convert.ToBase64String (hasher.GetBytes (20))
+				.Replace ('+', '#')
+				.Replace('/','_')
+				.TrimEnd(new char[]{'='});;
 
 		}
 

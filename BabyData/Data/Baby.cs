@@ -12,8 +12,7 @@ namespace BabyData.Data
 	{
 
 		public List<BabyEvent> Events = new List<BabyEvent> ();
-		private string _id;
-		public string Id{ get { return this._id; } set { this._id = this.FromURLSafeBase64 (value); } }
+		public string Id;
 		public string Name;
 		public string Image;
 		public string Sex;
@@ -61,12 +60,12 @@ namespace BabyData.Data
 			"\"name\":\"{1}\"," +
 			"\"image\":\"{2}\"," +
 			"\"sex\":\"{3}\"," +
-			"\"dateofbirth\":\"{4:yyyy-MM-dd hh:mm:ss zzz}\"," +
+			"\"dateofbirth\":\"{4:yyyy-MM-dd HH:mm:ss zzz}\"," +
 			"\"public\":\"{5}\"," +
 			"\"events\":[{7}]," +
 			"\"permissions\":[{6}]}}", 
 
-				ToURLSafeBase64(this.Id), 
+				this.Id, 
 				this.Name,
 				this.Image, 
 				this.Sex, 

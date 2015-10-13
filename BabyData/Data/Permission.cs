@@ -27,9 +27,9 @@ namespace BabyData.Data
 				"\"permission\":\"{0}\"," +
 				"\"baby\":\"{1}\"," +
 				"\"user\":\"{2}\"," +
-				"\"added\":\"{3:yyyy-MM-dd hh:mm:ss zzz}\"}}",
+				"\"added\":\"{3:yyyy-MM-dd HH:mm:ss zzz}\"}}",
 				this.Type,
-				this.ToURLSafeBase64(this.BabyId),
+				this.BabyId,
 				this.Username,
 				this.Added);
 		}
