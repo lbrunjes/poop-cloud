@@ -23,6 +23,7 @@ namespace BabyData.Data
 		public DateTime Joined = DateTime.Now;
 		public Roles Role = Roles.USER;
 		public Flags Flag = Flags.NONE;
+		public List<Permission> Permissions = new List<Permission>();
 
 		public User(string email, 
 			string username, 
@@ -80,13 +81,25 @@ namespace BabyData.Data
 
 		public override string ToJSON ()
 		{
+			String perms = "";
+			string prefix = "";
+			foreach (Permission p in this.Permissions) {
+				perms += prefix + p.ToJSON ();
+				prefix = ",";
+			}
+
 			return String.Format ("{{\"type\": \"user\"," +
 				"\"username\":\"{0}\"," +
 				"\"image\":\"{1}\"," +
 				"\"email\":\"{2}\"," +
-				"\"joined\":\"{3:yyyy-MM-dd hh:mm:ss zzz}\"}}", 
+				"\"joined\":\"{3:yyyy-MM-dd hh:mm:ss zzz}\"," +
+				"\"permissions\":[{4}]}}", 
 				this.Username, 
-				this.Image, this.Email,this.Joined);
+				this.Image, 
+				this.Email,
+				this.Joined,
+				perms
+			);
 		}
 
 

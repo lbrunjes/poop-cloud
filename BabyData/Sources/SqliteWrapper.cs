@@ -20,6 +20,16 @@ IsPublic
 FROM Baby 
 WHERE Id=@id";
 
+		private static readonly string READ_USER_PERMISSIONS =@"SELECT 
+Id,
+Type,
+Username,
+BabyId,
+Added
+FROM Permission 
+WHERE Username = @username
+ORDER BY Added ASC
+";
 		private static readonly string READ_BABY_PERMISSIONS =@"SELECT 
 Id,
 Type,
@@ -481,6 +491,31 @@ VALUES
 				Permission p = new Permission ();
 
 				 int.TryParse (r ["Id"].ToString (),out p.Id);
+				p.Added =  DateTime.ParseExact(r ["Added"].ToString (), 
+					DB_DATE_FORMAT,
+					CultureInfo.InvariantCulture );
+				p.BabyId = r ["BabyId"].ToString ();
+				p.Type = (Permission.Types)int.Parse (r ["Type"].ToString ());
+				p.Username = r ["Username"].ToString ();
+
+				Permissions.Add (p);
+			}
+			r.Close ();
+			return Permissions;
+		}
+
+		public List<Permission> GetPermissionsForUser( User user){
+			List<Permission> Permissions = new List<Permission> ();
+
+			SqliteCommand cmd = new SqliteCommand (READ_USER_PERMISSIONS, this.db);
+
+			cmd.Parameters.AddWithValue ("@username", user.Username);
+
+			SqliteDataReader r = cmd.ExecuteReader ();
+			while (r.Read ()) {
+				Permission p = new Permission ();
+
+				int.TryParse (r ["Id"].ToString (),out p.Id);
 				p.Added =  DateTime.ParseExact(r ["Added"].ToString (), 
 					DB_DATE_FORMAT,
 					CultureInfo.InvariantCulture );

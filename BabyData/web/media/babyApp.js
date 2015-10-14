@@ -75,6 +75,7 @@
 							babyController.addEvent("ERROR",
 							response.data.server_error.type+": " +
 								response.data.server_error.message);
+							alert(response.data.server_error.message);
 						}
 					);
 			}

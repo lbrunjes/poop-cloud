@@ -25,6 +25,8 @@ namespace BabyData.Data
 		User CreateUser (User target, User user);
 
 		List<Permission> GetPermissionsForBaby(Baby baby, User user);
+		List<Permission> GetPermissionsForUser(User user);
+
 		List<BabyEvent> GetEventsForBaby(Baby baby, User user);
 		List<BabyEvent> GetEventsForBaby (Baby baby, User user, Filter filter);
 	}

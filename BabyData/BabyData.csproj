@@ -92,6 +92,8 @@
     <Content Include="web\media\bg_feed.png" />
     <Content Include="web\media\bg_sleep.png" />
     <Content Include="web\media\charts.js" />
+    <Content Include="web\media\babyApp.js" />
+    <Content Include="web\media\babyData.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TODO.txt" />

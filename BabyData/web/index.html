@@ -15,11 +15,7 @@
 	//After load do all the cool stuff.
 	document.addEventListener("DOMContentLoaded", function(){
 		window.bD = new babyData("theChart");
-		bD.updateChart([
-			bD.dataset("diaper",[1,2,3]),
-			bD.dataset("feeding",[2,1,4]),
-			bD.dataset("sleep",[12,11,14]),
-			] ,{
+		bD.updateChart([] ,{
 				height:document.getElementById("theChart").height,
 				width:document.getElementById("theChart").width,
 				graph_type:"bar",

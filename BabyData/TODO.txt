@@ -10,7 +10,7 @@ FRONTEND
  - FBUILD FRONTEND FUNCTIONAL TEST
  - allow configuration of them buttons.
  - auto refresh
- -useful sleep charting.
+ - useful sleep charting.
 
 
 TESTS
