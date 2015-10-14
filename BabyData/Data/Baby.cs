@@ -60,7 +60,7 @@ namespace BabyData.Data
 			"\"name\":\"{1}\"," +
 			"\"image\":\"{2}\"," +
 			"\"sex\":\"{3}\"," +
-			"\"dateofbirth\":\"{4:yyyy-MM-dd HH:mm:ss zzz}\"," +
+			"\"dateofbirth\":\"{4:yyyy-MM-ddTHH:mm:sszzz}\"," +
 			"\"public\":\"{5}\"," +
 			"\"events\":[{7}]," +
 			"\"permissions\":[{6}]}}", 

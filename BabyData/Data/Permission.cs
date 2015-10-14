@@ -27,7 +27,7 @@ namespace BabyData.Data
 				"\"type\":\"{0}\"," +
 				"\"baby\":\"{1}\"," +
 				"\"user\":\"{2}\"," +
-				"\"added\":\"{3:yyyy-MM-dd HH:mm:ss zzz}\"}}",
+				"\"added\":\"{3:yyyy-MM-ddTHH:mm:sszzz}\"}}",
 				this.Type,
 				this.BabyId,
 				this.Username,

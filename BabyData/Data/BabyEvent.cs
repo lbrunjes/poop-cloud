@@ -31,7 +31,7 @@ namespace BabyData.Data
 				"\"type\":\"{2}\"," +
 				"\"subtype\":\"{6}\"," +
 				"\"user\":\"{3}\"," +
-				"\"time\":\"{4:yyyy-MM-dd HH:mm:ss zzz}\"," +
+				"\"time\":\"{4:yyyy-MM-ddTHH:mm:sszzz}\"," +
 				"\"details\":\"{5}\"" +
 				"}}", 
 				this.Id,
