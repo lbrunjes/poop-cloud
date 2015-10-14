@@ -116,6 +116,7 @@ Hash,
 Image,
 Role,
 Flag,
+DisplayJSON,
 Joined
 		
 FROM User 
@@ -129,7 +130,7 @@ Hash = @hash,
 Image = @image,
 Role = @role,
 Flag = @flag
-
+DisplayJSON = @displayjson
 WHERE
 Username=@username;";
 		private static readonly string CREATE_USER =@"INSERT INTO User
@@ -414,6 +415,7 @@ VALUES
 				u.Hash = r ["Hash"].ToString ();
 				u.Salt = r ["Salt"].ToString ();
 				u.Image = r ["Image"].ToString ();
+				u.DisplayData = r ["DisplayJSON"].ToString ();
 				u.Joined = DateTime.ParseExact(r ["Joined"].ToString (),
 					DB_DATE_FORMAT,
 					CultureInfo.InvariantCulture );
@@ -438,6 +440,8 @@ VALUES
 			cmd.Parameters.AddWithValue ("@image", target.Image);
 			cmd.Parameters.AddWithValue ("@role", (int)target.Role);
 			cmd.Parameters.AddWithValue ("@flag", (int)target.Flag);
+			cmd.Parameters.AddWithValue ("@displayjson", target.DisplayData);
+
 
 			int items = cmd.ExecuteNonQuery();
 

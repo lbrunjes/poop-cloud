@@ -24,7 +24,7 @@ namespace BabyData.Data
 		public Roles Role = Roles.USER;
 		public Flags Flag = Flags.NONE;
 		public List<Permission> Permissions = new List<Permission>();
-		public string displaydata = "{\"buttons\":[],\"colors\":[]}";
+		public string DisplayData = "false";//"{\"buttons\":[],\"colors\":[]}";
 
 		public User(string email, 
 			string username, 
@@ -95,12 +95,13 @@ namespace BabyData.Data
 				"\"email\":\"{2}\"," +
 				"\"joined\":\"{3:yyyy-MM-ddThh:mm:sszzz}\"," +
 				"\"permissions\":[{4}]," +
-				"\"displaydata\"}}", 
+				"\"displaydata\":{5}}}", 
 				this.Username, 
 				this.Image, 
 				this.Email,
 				this.Joined,
-				perms
+				perms,
+				this.DisplayData
 			);
 		}
 

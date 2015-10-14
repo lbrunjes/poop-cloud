@@ -7,6 +7,7 @@ CREATE TABLE User(
   Image     CHAR(1024),
   Role     INT,
   Flag     INT,
+  DisplayJSON CHAR(2048),
   Joined     CHAR(25)   NOT NULL
   );
 

@@ -6,35 +6,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="media/base.css"/>
 	<link rel="stylesheet" href="media/web.css"/>
+
 	<script src="media/babyData.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 	<script src="media/babyApp.js"></script>
-	
-	<script>
-
-	//After load do all the cool stuff.
-	document.addEventListener("DOMContentLoaded", function(){
-		window.bD = new babyData("theChart");
-		bD.updateChart([] ,{
-				height:document.getElementById("theChart").height,
-				width:document.getElementById("theChart").width,
-				graph_type:"bar",
-				background:false,
-				label_axis_x:"Number",
-				label_axis_y:"Days Ago"
-			});
-				
-	}, false);
 
 
-	</script>
-	
 
 </head>
 <body ng-controller="babyController as bC" >
 	<header id="baby-header">
 		<div id="user" class="{{bC.user.type}}">
-			<p>@{{bC.user.username}}</p>
+			<a href="user.html">@{{bC.user.username}}</a>
 			<ul id="my-baby-list" >
 				<li ng-repeat="perm in bC.user.permissions" class="{{perm.type}}">
 				<a href="?baby={{perm.baby}}">{{perm.baby}}</a>
@@ -43,59 +26,72 @@
 		</div>
 		<h1>{{bC.baby.name}}</h1>
 		<nav id="action-bar">
-			<button class="diaper" ng-click="bC.reportEvent('diaper','poo')">DIAPER<br/>Poo </button>
-			<button class="diaper" ng-click="bC.reportEvent('diaper','pee')">DIAPER<br/>Pee</button>
-			<button class="feeding" ng-click="bC.reportEvent('feeding','breast')">FEEDING<br/>breast</button>
-			<button class="feeding" ng-click="bC.reportEvent('feeding','breast')">FEEDING<br/>bottle</button>
-			<button class="sleep" ng-click="bC.reportEvent('sleep','down')">SLEEP <br/> Down</button>
-			<button class="sleep" ng-click="bC.reportEvent('sleep','up')">SLEEP <br/> up</button>
-		</nav>
-		<nav class="tab-nav">
-			<button ng-click="bC.showTab('glance')">glance</button>
-			<button ng-click="bC.showTab('timeline')">Timeline</button>
-			<button ng-click="bC.showTab('chart')">Chart</button>
+			<button class="{{button.type}}" ng-repeat="button in bC.buttons" ng-click="bC.reportEvent(button.type,button.subtype,button.details)">{{button.type.toUpperCase()}}<br/>{{button.subtype}}</button>
+
 		</nav>
 	</header>
 	
 	<article>
-		
+		<nav id="tab-nav">
+			<a class="tab-button active" ng-click="bC.showTab('glance',$event)">At A Glance</a>
+			<a class="tab-button" ng-click="bC.showTab('timeline',$event)">Timeline</a>
+			<a class="tab-button" ng-click="bC.showTab('chart',$event)">Chart</a>
+			<a class="tab-button" ng-click="bC.showTab('event',$event)">Custom Event</a>
+			<a class="tab-button" ng-click="bC.showTab('customize',$event)">Customize Appearence</a>
+		</nav>
+
 		<div id="timeline" class="tab hide">
 			<h2> Event Timeline</h2>
-
-			<div id="events-list" >
-				<div  ng-repeat="event in bC.baby.events| orderBy:'-time'" class="event {{event.type.toLowerCase()}}" id ="event-{{event.id}}">
-					<div class="chunk time" timestamp="{{event.time}}">
-						<p>{{bC.getAgo(event.time)}}</p>
-					</div>
-					<div class="chunk type">
-						<h3>{{event.type.toUpperCase()}}</h3>
-						<p>{{event.subtype}}</p>
-					</div>
-					<div class="chunk user">
-						<p><a href="#{{event.user}}">@{{event.user}}</a></p>
-						</div>
-					<div class="chunk details">
-						<p>{{event.details}}</p>
+			<p>A list of events and when they happpened</p>
+			<table id="events-list" >
+				<thead>
+					<tr>
+					<th></th>
+					<th>When it happend</th>
+					<th>What happened</th>
+					<th>Who reported it</th>
+					<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="event in bC.baby.events| orderBy:'-time'" class="event {{event.type.toLowerCase()}}" id ="event-{{event.id}}">
+					<td class="icon {{event.type.toLowerCase()}}"></td>
+					<td class="time" timestamp="{{event.time}}">
+						{{bC.getAgo(event.time)}}
+					</td>
+					<td class="type">
+						<strong>{{event.type.toUpperCase()}}</strong><br/>
+						{{event.subtype}}
+					</td>
+					<td class="user">
+						<a href="#{{event.user}}">@{{event.user}}</a>
+						</td>
+					<td class="details">
+						{{event.details}}
 						
-					</div>
-				</div>	
-			</div>
-
+					</td>
+				</tr>
+				</tbody>	
+			</table>
 		</div>
+
+
 		<div id="chart"  class="tab hide">
 			<h2>Chart</h2>
-			
+			<p>Let's graph stuff</p>
 			<form novalidate>
 				<p>Include:</p>
-				<div id="filters" ng-repeat="event in bC.glance">
-					<label for="{{event.type}}">{{event.type.toUpperCase()}}</label>
-					<input name="{{event.type}}" type="checkbox" 
-						checked="true" 
-						ng-model="bC.chartform[event.type]"><br/>
+				<div id="filters"> 
+					<div class="filter" ng-repeat="event in bC.glance">
+						<label for="{{event.type}}">{{event.type.toUpperCase()}}</label>
+						<input name="{{event.type}}" type="checkbox" 
+							checked="true" 
+							ng-model="bC.chartform[event.type]"><br/>
 
+					</div>
 				</div>
 				<label for="days">Show Days</label>
-				<input name="days" type="range" min="1" max="30" value="7" ng-model="bC.chartform.days">
+				<input name="days" type="range" min="1" max="30" value="{{bC.chartform.days}}||1" ng-model="bC.chartform.days">
 				<span>{{bC.chartform.days}}</span><br/>
 
 			
@@ -109,35 +105,72 @@
 
 		<div id="glance" class="tab show">
 			<h2>At a Glance</h2>
-
+			<p>The most recent event of every type.</p>
 			<div id="glance-list" >
 				<div ng-repeat="event in bC.glance" class="event {{event.type.toLowerCase()}}" id ="event-{{event.id}}">
-					<div class="chunk time" timestamp="{{event.time}}">
-						<p>{{bC.getAgo(event.time);}}</p>
+					<h3>{{event.type.toUpperCase()}}: {{event.subtype}} </h3>
+					<div time="{{event.time}}">
+						{{bC.getAgo(event.time);}} by @{{event.user}}
 					</div>
-					<div class="chunk type">
-						<h3>{{event.type.toUpperCase()}}: {{event.subtype}} </h3>
-					</div>
-					<div class="chunk user">
-						<p><a href="#{{event.user}}">@{{event.user}}</a></p>
-						</div>
-					<div class="chunk details">
-						<p>{{event.details}}</p>
-						
-					</div>
+			
+
 				</div>
 			</div>
 		</div>
-		<div id="info" class="tab hide">
-			<h2>Baby Details</h2>
+		<div id="event" class="tab hide">
+			<h2>Custom event</h2>
+			<p>Some time s you need to add an event We didn't think about.</p>
 
-			<div id="permission-list" ng-repeat="permission in bC.permissions">
-				{{permission.type}} {{permission.user}}
+			<div>
+				<input type="hidden" name="type" value="babyevents"/>
+				<input type="hidden" name="id" value="{{bC.baby.id}}"/><br/>
+				<input type="text" name="event" placeholder="Event Type" ng-model="bC.customEvent.type"/><br/>
+				<input type="text" name="event" placeholder="Event Subtype" ng-model="bC.customEvent.subtype"/><br/>
+				<input type="text" name="details" placeholder="Details" ng-model="bC.customEvent.details"/><br/>
+				<button ng-click="bC.reportEvent(bC.customEvent.type, bC.customEvent.subtype, bC.customEvent.details)">Report Event Now</button>
+				<button ng-click="bC.addButton(bC.customEvent.type, bC.customEvent.subtype, bC.customEvent.details)"><s>Add to top bar</s></button>
+				</div>
+		</div>
+		<div id="customize" class="tab hide">
+			<h1>This following is not yet working</h1>
+			<h3>Color Config</h3>
+			<p>Set teh highlight colors for your events</p>
+			<div>
+				<div ng-repeat="event in bC.glance" >
+					<input type="color" ng-init="bC.colors[event.type.toLowerCase()] = bC.colors[event.type.toLowerCase()]||bD.getColorFromString(event.type)" ng-model="bC.colors[event.type.toLowerCase()]"/>
+
+					<label for="{{event.type}}">{{event.type}}</label>
+					
+					<style type="text/css">
+					.{{event.type.toLowerCase()}}{background: {{bC.colors[event.type.toLowerCase()]}}!important;}
+					</style>
+				</div>
+			<button ng-click="alert('todo')"><s>Save Colors</s></button>
 			</div>
+			<h3>Buttons</h3>
+			<p>Configure buttons ({{bC.user.displaydata.button.length}})</p>
+			
+			<table id="button-list">
+				<thead>
+					<tr>
+					<th>Type</th>
+					<th>Subtype</th>
+					<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="button in bC.buttons" class="{{button.type}}">
+					<td>{{button.type}}</td>
+					<td>{{button.subtype}}</td>
+					<td>{{button.details}}</td>
+				</tr>
+				</tbody>
+			</table>
+			<button ng-click="alert('todo')"><s>Save Buttons</s></button>
 		</div>
 	</article>
 	<footer>
-	this is wasted space.
+	&copy; Brunjes
 	</footer>
 </body>
 </html>

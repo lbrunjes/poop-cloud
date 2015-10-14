@@ -29,6 +29,7 @@ namespace BabyData.Data
 
 		List<BabyEvent> GetEventsForBaby(Baby baby, User user);
 		List<BabyEvent> GetEventsForBaby (Baby baby, User user, Filter filter);
+
 	}
 
 	public struct Filter

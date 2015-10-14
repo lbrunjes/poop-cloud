@@ -1,7 +1,7 @@
-﻿FEATURES TO ADD TO THE BACKEND
+FEATURES TO ADD TO THE BACKEND
  - Password reset via email.
  - Account locking.
- - SORT OUT PREMISSION System a bit  basically make it Use users and objects instead of raw data.
+ - SORT OUT PREMISSION System a bit basically make it Use users and objects instead of raw data.
  - enable edit for be and p.
  - support users saving custom buttons/settings
 
@@ -11,7 +11,7 @@ FRONTEND
  - allow configuration of them buttons.
  - auto refresh
  - useful sleep charting.
-
+ - look into google matiral icons for use on buttons etc.
 
 TESTS
  -IMPLMENT

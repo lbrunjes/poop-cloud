@@ -6,8 +6,10 @@
 			this.glance = {};
 			this.search = {};
 			this.chartform = {};
+			this.customEvent ={};
 			
 			this.ServiceUrl="../Service.ashx";
+
 
 			//called at init
 			this.init =function(bd){
@@ -15,10 +17,18 @@
 			//	console.log(bD.query);
 				this.search = this.readQueryString();
 
-				this.getUserData();
 				this.getBaby(this.search.baby);
-
-				
+				this.getUserData();
+					
+				window.bD = new babyData("theChart");
+				bD.updateChart([] ,{
+						height:document.getElementById("theChart").height,
+						width:document.getElementById("theChart").width,
+						graph_type:"bar",
+						background:false,
+						label_axis_x:"Number",
+						label_axis_y:"Days Ago"
+					});
 			};
 
 			//gets data for the baby.
@@ -58,6 +68,11 @@
 				}
 
 			};
+			this.addButton =function(type, subtype, details){
+				var butt ={"type":type, "subtype":subtype,"details":details};
+				babyController.buttons.push(butt);
+
+			}
 
 			//adds data to the db
 			this.reportEvent=function(type, subtype, details){
@@ -69,11 +84,11 @@
 					"&subtype="+ subtype||"" +
 					"&details="+ details||"").then(
 						function(response){
-							
+							console.log("reported event");
 							babyController.addEvent(response.data.events[0]);
 						},
 						function(response){
-							console.log("error @ load user", response);
+							console.log("error @ report event", response);
 							babyController.addEvent("ERROR",
 							response.data.server_error.type+": " +
 								response.data.server_error.message);
@@ -82,7 +97,7 @@
 					);
 			}
 			//used to do tabbed interface.
-			this.showTab=function(ele_id){
+			this.showTab=function(ele_id,e){
 				var tgt = document.getElementById(ele_id);
 				if(tgt){
 					var tabs = document.getElementsByClassName("tab");
@@ -92,6 +107,12 @@
 					}
 					tgt.classList.add("show");
 					tgt.classList.remove("hide");
+					
+					tabs = document.getElementsByClassName("tab-button");
+					for(var i = 0; i < tabs.length;i++){
+						tabs[i].classList.remove("active");
+					}
+					e.target.classList.add("active");
 				}
 			};
 			//Gets user data
@@ -99,11 +120,44 @@
 				var un = username||"";
 				$http.get(this.ServiceUrl+"?type=user&id="+un).then(
 					function(response){
-						console.log("success", response);
 						babyController.user = response.data;
+						console.log("x");
+						if(!babyController.user.displaydata){
+							babyController.user.displaydata={
+								"button":[
+									{"type":"feeding", "subtype":"breast","details":""},
+									{"type":"feeding", "subtype":"bottle","details":""},
+									{"type":"sleep", "subtype":"up","details":"awoke, likely screaming"},
+									{"type":"sleep", "subtype":"down","details":"asleep, mercifully"},
+									{"type":"diaper", "subtype":"poo","details":""},
+									{"type":"diaper", "subtype":"pee","details":""}
+								],
+								"color":{
+									"feeding":"#B2AC75",
+									"diaper":"#FFCCE2",
+									"sleep":"#6AE7FF",
+									"info":"#00000f"
+								}
+							}
+						}
+
+						for(var key in babyController.glance){
+							var colors= babyController.user.displaydata.color;
+
+							if(!colors[key.toLowerCase()]){
+								colors[key.toLowerCase()] = bD.getColorFromString(key);
+
+							}
+							
+						}
+						babyController.colors = babyController.user.displaydata.color;
+						babyController.buttons = babyController.user.displaydata.button;
 					},
 					function(response){
 						console.log("error @ load user", response);
+						babyController.addEvent("ERROR",
+							response.data.server_error.type+": " +
+								response.data.server_error.message);
 
 					}
 				);
@@ -210,7 +264,7 @@
 			//turn time stamp into a time ago by major type
 			this.getAgo=function(timestamp){
 				var ts = Math.abs(Date.parse(timestamp) - new Date());
-			
+				
 				if(ts){
 					if(ts <1000){
 						ts ="now"

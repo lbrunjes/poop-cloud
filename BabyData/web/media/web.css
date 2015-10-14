@@ -1,4 +1,25 @@
-﻿
+body{
+	background:#222;;
+	color:#fff;
+	min-width: 320px;
+	margin:0 4px;
+}
+article{
+	margin:8px 4px;
+}
+
+a{
+	color:#fff;
+
+}
+h1, h2{
+	margin:8px 0;
+}
+input{
+	font-size:16px;
+	padding:4px;
+	margin:4px 0px;
+}
 #baby-header{
 	
 	background: #333;
@@ -6,21 +27,8 @@
 	text-align:center;
 	vertical-align: center;
 }
-#baby-header h1{
-	height:64px;
-	margin:0;
-}
-#baby-header nav {
-height:64px;
-
-}
-body{
-	background:#222;;
-	color:#fff;
-}
-a{
-	color:#adf;
-
+#baby-header button{
+	margin-right:4px;
 }
 
 #user{
@@ -28,56 +36,77 @@ float:right;
 padding:0 0 4px 4px;
 border:1px solid #222;
 margin:-1px -1px 0 0;
+background:#333;
+}
+#user  ul{
+	display:none;
+}
+#tab-nav{
+	border-bottom: 1px solid #444;
+}
+#tab-nav a{
+	display:inline-block;
+	margin:0 4px 0 0;
+	padding:4px 8px;
+	background: #333;
+	font-weight:bold;
 
 }
-#events-list{
-	padding: 0 1em;
+#tab-nav a.active{
+	background: #555;
+
 }
-#events-list .event{
+#events-list, #button-list{
+	background:#333;
+	border-collapse: collapse;
+	text-align: left;
+
+}
+#events-list td.icon{
+	padding-left:32px;
+}
+#events-list td, #button-list td{
+	vertical-align: center;
+	border-bottom: 4px solid #333;
 	
-	margin:1px 0 0 0 ;
-	clear:left;
-	border-width: 1px;
-	border-style: solid;
-	border-radius:4px;
+	padding:4px 8px;
+}
+#events-list td.icon{
+	width:16px;
+}
+#chart{
 
-	height:64px;
-	overflow:hidden;
-}
-#events-list .event h3,#events-list .event p{
-	margin:0 0 4px; 0
-}
-.event {
-	padding: 0 0 0 64px;
-	margin-bottom:4px;
-}
-
-.feeding{
-	border-color: #f00;
-	background-image:url("bg_feed.png");
-	background-color: #600;
-	color:#fff;
-		padding: 0 0 0 64px;
-	background-position: left center;
-	background-repeat: no-repeat;
-}
-.diaper{
-	border-color: #0f0;
-	background-image:url("bg_diaper.png");
-	background-color: #060;
-	color:#fff;
-		padding: 0 0 0 64px;
-	background-position: left center;
-	background-repeat: no-repeat;
 
 }
-.sleep{
-	border-color: #00f;
-	background-color: #006;
-	background-image:url("bg_sleep.png");
-	color:#fff;
-		padding: 0 0 0 64px;
-	background-position: left center;
-	background-repeat: no-repeat;
+.filter{
+display:inline-block;
+margin:0 32px 4px 0;
+border-bottom:1px solid #eee;
+}
 
+#glance-list{ 
+
+}
+#glance-list h3{ 
+	margin:0;
+}
+#glance-list .event{
+	margin:0 0 4px 0;
+	padding:4px 8px;
+}
+
+
+a.refresh::before{
+	content: "&e5d5;";
+	font-family: 'Material Icons';
+    text-transform: none;
+	font-feature-settings: 'liga';
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+a.refresh::close{
+	content: "close"
+}
+a.refresh::before{
+	content: "refresh"
 }
