@@ -2,7 +2,7 @@
 		.controller('babyController', function($scope, $http) {
 			var babyController = this;
 			this.baby={};
-			this.User={};
+			this.user={};
 			this.glance = {};
 			this.search = {};
 			this.chartform = {};
@@ -15,7 +15,9 @@
 			//	console.log(bD.query);
 				this.search = this.readQueryString();
 
+				this.getUserData();
 				this.getBaby(this.search.baby);
+
 				
 			};
 
@@ -94,9 +96,11 @@
 			};
 			//Gets user data
 			this.getUserData=function(username){
-				$http.get(this.ServiceUrl+"?type=user&id="+babyId).then(
+				var un = username||"";
+				$http.get(this.ServiceUrl+"?type=user&id="+un).then(
 					function(response){
-						console.log("success", response)
+						console.log("success", response);
+						babyController.user = response.data;
 					},
 					function(response){
 						console.log("error @ load user", response);

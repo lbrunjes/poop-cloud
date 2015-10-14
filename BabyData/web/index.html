@@ -33,8 +33,13 @@
 </head>
 <body ng-controller="babyController as bC" >
 	<header id="baby-header">
-		<div id="user">
-			
+		<div id="user" class="{{bC.user.type}}">
+			<p>@{{bC.user.username}}</p>
+			<ul id="my-baby-list" >
+				<li ng-repeat="perm in bC.user.permissions" class="{{perm.type}}">
+				<a href="?baby={{perm.baby}}">{{perm.baby}}</a>
+				</li>
+			</ul>
 		</div>
 		<h1>{{bC.baby.name}}</h1>
 		<nav id="action-bar">
@@ -57,8 +62,8 @@
 		<div id="timeline" class="tab hide">
 			<h2> Event Timeline</h2>
 
-			<div id="events-list"  ng-repeat="event in bC.baby.events| orderBy:'-time'">
-				<div class="event {{event.type.toLowerCase()}}" id ="event-{{event.id}}">
+			<div id="events-list" >
+				<div  ng-repeat="event in bC.baby.events| orderBy:'-time'" class="event {{event.type.toLowerCase()}}" id ="event-{{event.id}}">
 					<div class="chunk time" timestamp="{{event.time}}">
 						<p>{{bC.getAgo(event.time)}}</p>
 					</div>
@@ -105,8 +110,8 @@
 		<div id="glance" class="tab show">
 			<h2>At a Glance</h2>
 
-			<div id="glance-list" ng-repeat="event in bC.glance">
-				<div class="event {{event.type.toLowerCase()}}" id ="event-{{event.id}}">
+			<div id="glance-list" >
+				<div ng-repeat="event in bC.glance" class="event {{event.type.toLowerCase()}}" id ="event-{{event.id}}">
 					<div class="chunk time" timestamp="{{event.time}}">
 						<p>{{bC.getAgo(event.time);}}</p>
 					</div>
