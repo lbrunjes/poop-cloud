@@ -178,7 +178,7 @@ var babyData = function(id){
 		if(points==0){
 	//		console.log("no data => Exiting")
 			context.fillStyle = opts.label_color;
-			context.fillText("NO DATA",context.width/2, context.height/2);
+			context.fillText("NO DATA - USE FORM TO ADD DATA",context.width/2, context.height/2);
 			context.restore();
 			return;
 		}
