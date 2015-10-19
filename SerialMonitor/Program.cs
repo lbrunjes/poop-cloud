@@ -27,7 +27,8 @@ namespace SerialMonitor
 			base.AssignValues ();
 
 			//deal with the network commands...
-			String join = "?type=babyevents&eventtype={0}&subtype={1}&details={2}";
+			String join = "?type=babyevents&id="+this.ConfigFile["babyid"]
+				+"&eventtype={0}&subtype={1}&details={2}";
 			networkCommands.Add (2, String.Format (join,
 				ConfigFile ["networkCommands:2"].Split (',')));
 			networkCommands.Add (3, String.Format (join,
