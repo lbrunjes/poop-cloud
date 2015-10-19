@@ -38,6 +38,7 @@ namespace BabyData
 				u = DataSource.ReadUser (request ["id"]);
 				u.Email = request ["email"];
 				u.Image = request ["image"];
+				u.DisplayJson = request ["displaydata"];
 
 				//PasswordChanges matching length, and old ps checked.
 				if (String.IsNullOrEmpty (request ["password1"]) &&
@@ -45,6 +46,7 @@ namespace BabyData
 				    request ["password1"].Length > Registration.MIN_PW_LENGTH &&
 				    String.IsNullOrEmpty (request ["password_old"]) &&
 				    u.BuildHash (request ["password_old"]) == u.Hash) {
+
 					u.Hash = u.BuildHash (request ["password1"]);
 				}
 
