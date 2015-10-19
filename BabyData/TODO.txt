@@ -1,17 +1,17 @@
 FEATURES TO ADD TO THE BACKEND
  - Password reset via email.
  - Account locking.
- - SORT OUT PREMISSION System a bit basically make it Use users and objects instead of raw data.
- - enable edit for be and p.
- - support users saving custom buttons/settings
+ - verify db ids for b+p and edit? maybe just delete
 
 FRONTEND
  - IMPLEMENT FORM FOR ADDING EVENTS
  - FBUILD FRONTEND FUNCTIONAL TEST
- - allow configuration of them buttons.
  - auto refresh
  - useful sleep charting.
  - look into google matiral icons for use on buttons etc.
+ - re oder buttons
+ - remove buttons
+ - save buttons/colors w/o updaing pw? unsure?
 
 TESTS
  -IMPLMENT

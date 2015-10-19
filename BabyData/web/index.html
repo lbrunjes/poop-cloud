@@ -128,11 +128,10 @@
 				<input type="text" name="event" placeholder="Event Subtype" ng-model="bC.customEvent.subtype"/><br/>
 				<input type="text" name="details" placeholder="Details" ng-model="bC.customEvent.details"/><br/>
 				<button ng-click="bC.reportEvent(bC.customEvent.type, bC.customEvent.subtype, bC.customEvent.details)">Report Event Now</button>
-				<button ng-click="bC.addButton(bC.customEvent.type, bC.customEvent.subtype, bC.customEvent.details)"><s>Add to top bar</s></button>
+				<button ng-click="bC.addButton(bC.customEvent.type, bC.customEvent.subtype, bC.customEvent.details)">Add to top bar</button>
 				</div>
 		</div>
 		<div id="customize" class="tab hide">
-			<h1>This following is not yet working</h1>
 			<h3>Color Config</h3>
 			<p>Set teh highlight colors for your events</p>
 			<div>
@@ -163,6 +162,7 @@
 					<td>{{button.type}}</td>
 					<td>{{button.subtype}}</td>
 					<td>{{button.details}}</td>
+					<td>remove</td>
 				</tr>
 				</tbody>
 			</table>

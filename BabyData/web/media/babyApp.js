@@ -7,6 +7,7 @@
 			this.search = {};
 			this.chartform = {};
 			this.customEvent ={};
+			this.eventTypeBlacklist =["event"];
 			
 			this.ServiceUrl="../Service.ashx";
 
