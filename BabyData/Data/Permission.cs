@@ -11,6 +11,7 @@ namespace BabyData.Data
 		}
 		public Types Type;
 		public string BabyId;
+		public string BabyName="";
 		public string Username;
 		public int Id;
 		public DateTime Added =DateTime.Now;
@@ -26,12 +27,15 @@ namespace BabyData.Data
 			return string.Format ("{{" +
 				"\"type\":\"{0}\"," +
 				"\"baby\":\"{1}\"," +
+				"\"babyname\":\"{4}\"," +
 				"\"user\":\"{2}\"," +
 				"\"added\":\"{3:yyyy-MM-ddTHH:mm:sszzz}\"}}",
 				this.Type,
 				this.BabyId,
 				this.Username,
-				this.Added);
+				this.Added,
+				this.BabyName
+			);
 		}
 	}
 }

@@ -41,14 +41,14 @@ namespace BabyData
 				u.DisplayJson = request ["displaydata"];
 
 				//PasswordChanges matching length, and old ps checked.
-				if (String.IsNullOrEmpty (request ["password1"]) &&
-				    request ["password1"] == request ["password2"] &&
-				    request ["password1"].Length > Registration.MIN_PW_LENGTH &&
-				    String.IsNullOrEmpty (request ["password_old"]) &&
-				    u.BuildHash (request ["password_old"]) == u.Hash) {
-
-					u.Hash = u.BuildHash (request ["password1"]);
-				}
+//				if (!String.IsNullOrEmpty (request ["password1"]) &&
+//				    request ["password1"] == request ["password2"] &&
+//				    request ["password1"].Length > Registration.MIN_PW_LENGTH &&
+//				    String.IsNullOrEmpty (request ["password_old"]) &&
+//				    u.BuildHash (request ["password_old"]) == u.Hash) {
+//
+//					u.Hash = u.BuildHash (request ["password1"]);
+//				}
 
 				if (u.Username == user.Username || user.Role == User.Roles.ADMIN) {
 					DataSource.SaveUser (u, user);

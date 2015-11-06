@@ -7,7 +7,7 @@ CREATE TABLE User(
   Image     CHAR(1024),
   Role     INT,
   Flag     INT,
-  DisplayJSON CHAR(2048),
+  DisplayJSON text,
   Joined     CHAR(25)   NOT NULL
   );
 
@@ -46,7 +46,7 @@ CREATE TABLE Permission(
 
 --create one admin user. password is password... 
   INSERT INTO USER (
-  Username, Email, Salt, Hash, Image, Role, Flag, Joined
+  Username, Email, Salt, Hash, Image, Role, Flag, Joined, DisplayJSON
   )VALUES(
 'admin',
 'admin@fake.com',
@@ -55,7 +55,8 @@ CREATE TABLE Permission(
 '',
 2,
 0,
-'2015-10-13 13:46:18 -04:00'   
+'2015-10-13 13:46:18 -04:00',
+'false'   
 );
 
 --create the test baby

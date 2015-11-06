@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
@@ -6,6 +7,10 @@ namespace BabyData.Data
 {
 	public class User:DataObject
 	{
+		//basically this is atruncation check.
+		public static Regex ValidateJSON = new Regex (@"^\{.+\}$");
+		public static readonly string DEFAULT_IMAGE = "media/none.png";
+
 		public enum Roles{ USER = 1,
 			ADMIN = 2,
 		}
@@ -89,6 +94,7 @@ namespace BabyData.Data
 				prefix = ",";
 			}
 
+
 			return String.Format ("{{\"type\": \"user\"," +
 				"\"username\":\"{0}\"," +
 				"\"image\":\"{1}\"," +
@@ -97,11 +103,11 @@ namespace BabyData.Data
 				"\"permissions\":[{4}]," +
 				"\"displaydata\":{5}}}", 
 				this.Username, 
-				this.Image, 
+				String.IsNullOrEmpty(this.Image)?DEFAULT_IMAGE: this.Image, 
 				this.Email,
 				this.Joined,
 				perms,
-				this.DisplayJson
+				ValidateJSON.IsMatch(this.DisplayJson)? this.DisplayJson : "false"
 			);
 		}
 

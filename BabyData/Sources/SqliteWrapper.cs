@@ -21,12 +21,14 @@ FROM Baby
 WHERE Id=@id";
 
 		private static readonly string READ_USER_PERMISSIONS =@"SELECT 
-Id,
-Type,
-Username,
-BabyId,
-Added
-FROM Permission 
+Permission.Id,
+Permission.Type,
+Permission.Username,
+Permission.BabyId,
+Permission.Added,
+Baby.Name
+FROM Permission
+INNER JOIN Baby ON Baby.Id = Permission.BabyId
 WHERE Username = @username
 ORDER BY Added ASC
 ";
@@ -125,11 +127,9 @@ WHERE Username=@username";
 SET
 
 Email = @email,
-Salt = @salt,
-Hash = @hash,
 Image = @image,
 Role = @role,
-Flag = @flag
+Flag = @flag,
 DisplayJSON = @displayjson
 WHERE
 Username=@username;";
@@ -436,7 +436,7 @@ VALUES
 			}
 			cmd.Parameters.AddWithValue ("@username", target.Username);
 			cmd.Parameters.AddWithValue ("@email", target.Email);
-			cmd.Parameters.AddWithValue ("@salt", target.Salt);
+
 			cmd.Parameters.AddWithValue ("@image", target.Image);
 			cmd.Parameters.AddWithValue ("@role", (int)target.Role);
 			cmd.Parameters.AddWithValue ("@flag", (int)target.Flag);
@@ -526,6 +526,7 @@ VALUES
 				p.BabyId = r ["BabyId"].ToString ();
 				p.Type = (Permission.Types)int.Parse (r ["Type"].ToString ());
 				p.Username = r ["Username"].ToString ();
+				p.BabyName = r ["Name"].ToString ();
 
 				Permissions.Add (p);
 			}

@@ -32,14 +32,30 @@ input{
 }
 
 #user{
-float:right;
-padding:0 0 4px 4px;
-border:1px solid #222;
-margin:-1px -1px 0 0;
-background:#333;
+	float:right;
+	padding:0 0 4px 4px;
+	border:1px solid #222;
+	margin:-1px -1px 0 0;
+	background:#333;
+	text-align:left;
+	vertical-align: middle;
+}
+#user span{
+
+	padding-bottom:8px;
+}
+#user img{
+	width:32px;
+	height:32px;
+	border-radius: 16px;
+	border:2px solid #eee;
+
 }
 #user  ul{
 	display:none;
+}
+#user:hover ul{
+	display:block;
 }
 #tab-nav{
 	border-bottom: 1px solid #444;

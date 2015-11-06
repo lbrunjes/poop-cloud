@@ -17,10 +17,12 @@
 <body ng-controller="babyController as bC" >
 	<header id="baby-header">
 		<div id="user" class="{{bC.user.type}}">
-			<a href="user.html">@{{bC.user.username}}</a>
+			<img class="avatar" ng-src="{{bC.user.image}}"/> 
+			<span>{{bC.user.username}}</span>
 			<ul id="my-baby-list" >
+
 				<li ng-repeat="perm in bC.user.permissions" class="{{perm.type}}">
-				<a href="?baby={{perm.baby}}">{{perm.baby}}</a>
+				<a href="?baby={{perm.baby}}">{{perm.babyname}}</a>
 				</li>
 			</ul>
 		</div>
@@ -144,7 +146,7 @@
 					.{{event.type.toLowerCase()}}{background: {{bC.colors[event.type.toLowerCase()]}}!important;}
 					</style>
 				</div>
-			<button ng-click="alert('todo')"><s>Save Colors</s></button>
+			<button ng-click="bC.saveUser()">Save Colors & Buttons</button>
 			</div>
 			<h3>Buttons</h3>
 			<p>Configure buttons ({{bC.user.displaydata.button.length}})</p>
@@ -166,7 +168,7 @@
 				</tr>
 				</tbody>
 			</table>
-			<button ng-click="alert('todo')"><s>Save Buttons</s></button>
+			<button ng-click="bC.saveUser()">Save Colors & Buttons</button>
 		</div>
 	</article>
 	<footer>

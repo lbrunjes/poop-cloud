@@ -80,7 +80,7 @@
 
 				$http.post(this.ServiceUrl+
 					"?type=babyevents"+
-					"&id="+babyController.baby.id+
+					"&id="+babyController.user.id+
 					"&eventtype="+ type +
 					"&subtype="+ subtype||"" +
 					"&details="+ details||"").then(
@@ -96,7 +96,12 @@
 							alert(response.data.server_error.message);
 						}
 					);
-			}
+			};
+
+		
+
+
+
 			//used to do tabbed interface.
 			this.showTab=function(ele_id,e){
 				var tgt = document.getElementById(ele_id);
@@ -151,6 +156,7 @@
 							}
 							
 						}
+						//pass by ref means updaign one updates both.
 						babyController.colors = babyController.user.displaydata.color;
 						babyController.buttons = babyController.user.displaydata.button;
 					},
@@ -164,7 +170,29 @@
 				);
 
 			};
+			//adds data to the db
+			this.saveUser=function(){
 
+				$http.post(this.ServiceUrl+
+					"?type=user"+
+					"&id="+babyController.user.username+
+					"&email="+ babyController.user.email +
+					"&image="+ babyController.user.image +
+					"&displaydata="+ JSON.stringify(babyController.user.displaydata) //this line is bad for some reason.
+					).then(
+						function(response){
+							console.log("reported event");
+							
+						},
+						function(response){
+							console.log("error @ report event", response);
+							babyController.addEvent("ERROR",
+							response.data.server_error.type+": " +
+								response.data.server_error.message);
+							alert(response.data.server_error.message);
+						}
+					);
+			};
 			//get requested baby
 			this.getBaby=function(babyId){
 				$http.get(this.ServiceUrl+"?type=baby&id="+babyId).then(
