@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI;
 using BabyData.Data;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace BabyData
 {
@@ -14,7 +15,7 @@ namespace BabyData
 		public void ProcessRequest (HttpContext context)
 		{
 			try{
-				IBabyDataSource ds = new SqliteWrapper ("URI=file:test.db");
+				IBabyDataSource ds = new SqliteWrapper (ConfigurationManager.ConnectionStrings["baby_data"].ConnectionString);
 				List<string> errors = new List<string> ();
 
 				string username = context.Request["user"];

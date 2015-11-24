@@ -4,6 +4,7 @@ using System.Web.UI;
 using BabyData.Authentication;
 using BabyData.Data;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace BabyData
 {
@@ -13,7 +14,7 @@ namespace BabyData
 		public void ProcessRequest (HttpContext context)
 		{
 			try{
-				IBabyDataSource Sql = new SqliteWrapper ("URI=file:test.db");
+				IBabyDataSource Sql = new SqliteWrapper (ConfigurationManager.ConnectionStrings["baby_data"].ConnectionString);
 				AuthMethod Authentication = new HttpBasic(Sql);
 
 				//set headers
